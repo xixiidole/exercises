@@ -1,0 +1,616 @@
+<!DOCTYPE>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>startCountingdown</title>
+<style type="text/css">
+	.colorBlock{padding-left: 20px;}
+	.floating{float: left;}
+	.tip{margin-top:100px;}
+	.centerTitle{text-align: center;}
+</style>
+</head>
+<body class="background">
+<div id="noonwork" style="width:600px;display: none;" class="floating tip">
+	<div id="title4" class="centerTitle" style="width:400px;">下午上班时间!!!</div>
+	<canvas id="testcanvas4" class="floating" width="400" height="300">您的浏览器暂不支持Canvas</canvas>
+	<div class="floating tip">
+		<span style="display: block; ">
+			<a class="colorBlock" id="passColor4"> </a>
+			<span id="pass4">已过去：??</span>
+		</span>
+		<span style="display: block;margin-top:20px;">
+			<a class="colorBlock" id="lessColor4"> </a>
+			<span id="less4">还剩余：??</span>
+		</span>
+	</div>
+</div>
+<div id="morningwork" style="width:600px;display: none;" class="floating tip">
+	<div id="title3" class="centerTitle"  style="width:400px;">上午上班时间!!!</div>
+	<canvas id="testcanvas3" class="floating" width="400" height="300">您的浏览器暂不支持Canvas</canvas>
+	<div class="floating tip" >
+		<span style="display: block; ">
+			<a class="colorBlock" id="passColor3"> </a>
+			<span id="pass3">已过去：??</span>
+		</span>
+		<span style="display: block;margin-top:20px;">
+			<a class="colorBlock" id="lessColor3"> </a>
+			<span id="less3">还剩余：??</span>
+		</span>
+	</div>
+</div>
+<div id="noonrest" style="width:600px;display: none;" class="floating tip">
+	<div id="title2" class="centerTitle"  style="width:400px;">午休时间!!!</div>
+	<canvas id="testcanvas2" class="floating" width="400" height="300">您的浏览器暂不支持Canvas</canvas>
+	<div class="floating tip" >
+		<span style="display: block; ">
+			<a class="colorBlock" id="passColor2"> </a>
+			<span id="pass2">已过去：??</span>
+		</span>
+		<span style="display: block;margin-top:20px;">
+			<a class="colorBlock" id="lessColor2"> </a>
+			<span id="less2">还剩余：??</span>
+		</span>
+	</div>
+</div>
+<div id="sleeppingtime" style="width:600px;display: none;" class="floating tip">
+	<div id="title" class="centerTitle"  style="width:400px;">做梦时间!!!</div>
+	<canvas id="testcanvas" class="floating" width="400" height="300">您的浏览器暂不支持Canvas</canvas>
+	<div class="floating tip" >
+		<span style="display: block; ">
+			<a class="colorBlock" id="passColor"> </a>
+			<span id="pass">已过去：??</span>
+		</span>
+		<span style="display: block;margin-top:20px;">
+			<a class="colorBlock" id="lessColor"> </a>
+			<span id="less">还剩余：??</span>
+		</span>
+	</div>
+</div>
+
+
+<script type="text/javascript">
+	var color = [ "#27255F", "#2F368F", "#3666B0", "#2CA8E0", "#77D1F6" ];
+	var data = [ 5, 30, 15, 30, 20 ];
+
+	function drawCircle() {
+		var canvas = document.getElementById("circle");
+		var ctx = canvas.getContext("2d");
+		var startPoint = 0;
+		for (var i = 0; i < data.length; i++) {
+			ctx.fillStyle = color[i];
+			ctx.beginPath();
+			ctx.moveTo(200, 150);
+			ctx.arc(200, 150, 150, startPoint, startPoint + Math.PI * 2
+					* (data[i] / 100), false);
+			ctx.fill();
+			startPoint += Math.PI * 2 * (data[i] / 100);
+		}
+	}
+	//drawCircle();
+	
+	function sleepingTime(){
+		//下午上班		
+		//[00 - 09][09 - 12][12 - 14][14 - 18][18 - 24]
+		var startdate = new Date();
+		startdate.setHours(0);
+		startdate.setMinutes(0);
+		startdate.setSeconds(0);
+		var enddate = new Date();
+		//enddate.setDate(enddate.getDate()+1);
+		enddate.setHours(9);
+		enddate.setMinutes(0);
+		enddate.setSeconds(0);
+		//
+		var color4 = [ "#cbd9ff", "#5c88ff" ];
+		var dataCount4 = allMin(startdate,enddate);
+		console.log(dataCount4);
+		var d = min(startdate);
+		var data4 = [ d, dataCount4-d ];
+		if(dataCount4-d<=0){
+			//该时间段倒计时已结束
+			data4 = [ dataCount4, 0 ];
+			document.getElementById("title").innerHTML = "该起床了!!! <sub>（计时已结束）</sub>";
+		}
+		tip4redrawing("睡觉 - 做梦时间倒计时");
+		//
+		var canvas = document.getElementById("testcanvas");
+		var ctx = canvas.getContext("2d");
+		//
+		var startPoint = 1.5;
+		for (var i = 0; i < data4.length; i++) {
+			//第一列数据为已过去
+			if(i==0){
+				document.getElementById("passColor").style.backgroundColor = color4[i];
+				document.getElementById("pass").innerHTML="已过去："+data4[i]+"min";
+			}else{
+				document.getElementById("lessColor").style.backgroundColor = color4[i];
+				document.getElementById("less").innerHTML="还剩余："+data4[i]+"min";
+			}
+			ctx.beginPath();
+			ctx.moveTo(200, 150);
+			endPoint =  (data4[i]/dataCount4 * 2 + startPoint) ;
+			ctx.arc(200, 150, 150, startPoint * Math.PI , endPoint * Math.PI , false);
+			ctx.fillStyle = color4[i];
+			ctx.fill();
+			startPoint = endPoint;
+		}
+	}
+	
+	
+	function noonRest(){
+		//下午上班		
+		//[00 - 09][09 - 12][12 - 14][14 - 18][18 - 24]
+		var startdate = new Date();
+		startdate.setHours(9);
+		startdate.setMinutes(0);
+		var enddate = new Date();
+		enddate.setHours(12);
+		enddate.setMinutes(0);
+		//
+		var color4 = [ "#dcf5d8", "#8aff78" ];
+		var dataCount4 = allMin(startdate,enddate);
+		var d = min(startdate);
+		var data4 = [ d, dataCount4-d ];
+		if(dataCount4-d<=0){
+			//该时间段倒计时已结束
+			data4 = [ dataCount4, 0 ];
+			document.getElementById("title2").innerHTML = "午休时间已过!!! <sub>（计时已结束）</sub>";
+		}
+		tip4redrawing("中午 - 午休时间倒计时");
+		//
+		var canvas = document.getElementById("testcanvas2");
+		var ctx = canvas.getContext("2d");
+		//
+		var startPoint = 1.5;
+		for (var i = 0; i < data4.length; i++) {
+			//第一列数据为已过去
+			if(i==0){
+				document.getElementById("passColor2").style.backgroundColor = color4[i];
+				document.getElementById("pass2").innerHTML="已过去："+data4[i]+"min";
+			}else{
+				document.getElementById("lessColor2").style.backgroundColor = color4[i];
+				document.getElementById("less2").innerHTML="还剩余："+data4[i]+"min";
+			}
+			ctx.beginPath();
+			ctx.moveTo(200, 150);
+			endPoint =  (data4[i]/dataCount4 * 2 + startPoint) ;
+			ctx.arc(200, 150, 150, startPoint * Math.PI , endPoint * Math.PI , false);
+			ctx.fillStyle = color4[i];
+			ctx.fill();
+			startPoint = endPoint;
+		}
+	}
+	
+	
+	function morningWork(){
+		//下午上班		
+		//[00 - 09][09 - 12][12 - 14][14 - 18][18 - 24]
+		var startdate = new Date();
+		startdate.setHours(9);
+		startdate.setMinutes(0);
+		var enddate = new Date();
+		enddate.setHours(12);
+		enddate.setMinutes(0);
+		//
+		var color4 = [ "#f2e6be", "#fcd606" ];
+		var dataCount4 = allMin(startdate,enddate);
+		var d = min(startdate);
+		var data4 = [ d, dataCount4-d ];
+		if(dataCount4-d<=0){
+			//该时间段倒计时已结束
+			data4 = [ dataCount4, 0 ];
+			document.getElementById("title3").innerHTML = "午休时间!!! <sub>（计时已结束）</sub>";
+		}
+		tip4redrawing("上午 - 工作时间倒计时");
+		//
+		var canvas = document.getElementById("testcanvas3");
+		var ctx = canvas.getContext("2d");
+		//
+		var startPoint = 1.5;
+		for (var i = 0; i < data4.length; i++) {
+			//第一列数据为已过去
+			if(i==0){
+				document.getElementById("passColor3").style.backgroundColor = color4[i];
+				document.getElementById("pass3").innerHTML="已过去："+data4[i]+"min";
+			}else{
+				document.getElementById("lessColor3").style.backgroundColor = color4[i];
+				document.getElementById("less3").innerHTML="还剩余："+data4[i]+"min";
+			}
+			ctx.beginPath();
+			ctx.moveTo(200, 150);
+			endPoint =  (data4[i]/dataCount4 * 2 + startPoint) ;
+			ctx.arc(200, 150, 150, startPoint * Math.PI , endPoint * Math.PI , false);
+			ctx.fillStyle = color4[i];
+			ctx.fill();
+			startPoint = endPoint;
+		}
+	}
+	
+	
+	function noonWork4(){
+		//下午上班		
+		//[00 - 09][09 - 12][12 - 14][14 - 18][18 - 24]
+		var startdate = new Date();
+		startdate.setHours(14);
+		startdate.setMinutes(0);
+		var enddate = new Date();
+		enddate.setHours(18);
+		enddate.setMinutes(0);
+		//
+		var color4 = [ "#e5f9ff", "#78ddff" ];
+		var dataCount4 = allMin(startdate,enddate); //240
+		var d = min(startdate);
+		var data4 = [ d, dataCount4-d ];
+		if(dataCount4-d<=0){
+			//该时间段倒计时已结束
+			data4 = [ dataCount4, 0 ];
+			document.getElementById("title4").innerHTML = "现在已经下班了!!! <sub>（计时已结束）</sub>";
+		}
+		tip4redrawing("下午 - 工作时间倒计时");
+		//
+		var canvas = document.getElementById("testcanvas4");
+		var ctx = canvas.getContext("2d");
+		//
+		var startPoint = 1.5;
+		for (var i = 0; i < data4.length; i++) {
+			//第一列数据为已过去
+			if(i==0){
+				document.getElementById("passColor4").style.backgroundColor = color4[i];
+				document.getElementById("pass4").innerHTML="已过去："+data4[i]+"min";
+			}else{
+				document.getElementById("lessColor4").style.backgroundColor = color4[i];
+				document.getElementById("less4").innerHTML="还剩余："+data4[i]+"min";
+			}
+			ctx.beginPath();
+			ctx.moveTo(200, 150);
+			endPoint =  (data4[i]/dataCount4 * 2 + startPoint) ;
+			ctx.arc(200, 150, 150, startPoint * Math.PI , endPoint * Math.PI , false);
+			ctx.fillStyle = color4[i];
+			ctx.fill();
+			startPoint = endPoint;
+		}
+	}
+	
+	
+	function min(time){
+		var nt = new Date();
+		var ntt = new Date(nt.getFullYear()+"-"+(nt.getMonth()+1)+"-"+nt.getDate()+" "+nt.getHours()+":"+nt.getMinutes());
+		return parseInt((ntt.getTime() - time.getTime()) / 1000 /60 );
+		/* var nmin = new Date().getHours() * 60 + new Date().getMinutes() ;
+		var smin = time.getHours() * 60 + time.getMinutes() ;
+		return nmin - smin; */
+	}
+	function allMin(startTime,endTime){
+		return parseInt(endTime.getTime() - startTime.getTime()) / 1000 / 60 ;
+		
+	}
+	function tip4redrawing(pieName){
+		console.log("["+new Date().getFullYear()+"-"+(new Date().getMonth()+1)+"-"+new Date().getDate()+" "+new Date().getHours()+":"+new Date().getMinutes()+":"+new Date().getSeconds()+"] "+pieName+" redrawing...");
+	}
+	
+	<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+	<html>
+	<head>
+	<meta charset="UTF-8">
+	<title>startCountingdown</title>
+	<style type="text/css">
+		.colorBlock{padding-left: 20px;}
+		.floating{float: left;}
+		.tip{margin-top:100px;}
+		.centerTitle{text-align: center;}
+	</style>
+	</head>
+	<body class="background">
+	<div id="noonwork" style="width:600px;display: none;" class="floating tip">
+		<div id="title4" class="centerTitle" style="width:400px;">下午上班时间!!!</div>
+		<canvas id="testcanvas4" class="floating" width="400" height="300">您的浏览器暂不支持Canvas</canvas>
+		<div class="floating tip">
+			<span style="display: block; ">
+				<a class="colorBlock" id="passColor4"> </a>
+				<span id="pass4">已过去：??</span>
+			</span>
+			<span style="display: block;margin-top:20px;">
+				<a class="colorBlock" id="lessColor4"> </a>
+				<span id="less4">还剩余：??</span>
+			</span>
+		</div>
+	</div>
+	<div id="morningwork" style="width:600px;display: none;" class="floating tip">
+		<div id="title3" class="centerTitle"  style="width:400px;">上午上班时间!!!</div>
+		<canvas id="testcanvas3" class="floating" width="400" height="300">您的浏览器暂不支持Canvas</canvas>
+		<div class="floating tip" >
+			<span style="display: block; ">
+				<a class="colorBlock" id="passColor3"> </a>
+				<span id="pass3">已过去：??</span>
+			</span>
+			<span style="display: block;margin-top:20px;">
+				<a class="colorBlock" id="lessColor3"> </a>
+				<span id="less3">还剩余：??</span>
+			</span>
+		</div>
+	</div>
+	<div id="noonrest" style="width:600px;display: none;" class="floating tip">
+		<div id="title2" class="centerTitle"  style="width:400px;">午休时间!!!</div>
+		<canvas id="testcanvas2" class="floating" width="400" height="300">您的浏览器暂不支持Canvas</canvas>
+		<div class="floating tip" >
+			<span style="display: block; ">
+				<a class="colorBlock" id="passColor2"> </a>
+				<span id="pass2">已过去：??</span>
+			</span>
+			<span style="display: block;margin-top:20px;">
+				<a class="colorBlock" id="lessColor2"> </a>
+				<span id="less2">还剩余：??</span>
+			</span>
+		</div>
+	</div>
+	<div id="sleeppingtime" style="width:600px;display: none;" class="floating tip">
+		<div id="title" class="centerTitle"  style="width:400px;">做梦时间!!!</div>
+		<canvas id="testcanvas" class="floating" width="400" height="300">您的浏览器暂不支持Canvas</canvas>
+		<div class="floating tip" >
+			<span style="display: block; ">
+				<a class="colorBlock" id="passColor"> </a>
+				<span id="pass">已过去：??</span>
+			</span>
+			<span style="display: block;margin-top:20px;">
+				<a class="colorBlock" id="lessColor"> </a>
+				<span id="less">还剩余：??</span>
+			</span>
+		</div>
+	</div>
+
+
+	<script type="text/javascript">
+		var color = [ "#27255F", "#2F368F", "#3666B0", "#2CA8E0", "#77D1F6" ];
+		var data = [ 5, 30, 15, 30, 20 ];
+
+		function drawCircle() {
+			var canvas = document.getElementById("circle");
+			var ctx = canvas.getContext("2d");
+			var startPoint = 0;
+			for (var i = 0; i < data.length; i++) {
+				ctx.fillStyle = color[i];
+				ctx.beginPath();
+				ctx.moveTo(200, 150);
+				ctx.arc(200, 150, 150, startPoint, startPoint + Math.PI * 2
+						* (data[i] / 100), false);
+				ctx.fill();
+				startPoint += Math.PI * 2 * (data[i] / 100);
+			}
+		}
+		//drawCircle();
+		
+		function sleepingTime(){
+			//下午上班		
+			//[00 - 09][09 - 12][12 - 14][14 - 18][18 - 24]
+			var startdate = new Date();
+			startdate.setHours(0);
+			startdate.setMinutes(0);
+			startdate.setSeconds(0);
+			var enddate = new Date();
+			//enddate.setDate(enddate.getDate()+1);
+			enddate.setHours(9);
+			enddate.setMinutes(0);
+			enddate.setSeconds(0);
+			//
+			var color4 = [ "#cbd9ff", "#5c88ff" ];
+			var dataCount4 = allMin(startdate,enddate);
+			console.log(dataCount4);
+			var d = min(startdate);
+			var data4 = [ d, dataCount4-d ];
+			if(dataCount4-d<=0){
+				//该时间段倒计时已结束
+				data4 = [ dataCount4, 0 ];
+				document.getElementById("title").innerHTML = "该起床了!!! <sub>（计时已结束）</sub>";
+			}
+			tip4redrawing("睡觉 - 做梦时间倒计时");
+			//
+			var canvas = document.getElementById("testcanvas");
+			var ctx = canvas.getContext("2d");
+			//
+			var startPoint = 1.5;
+			for (var i = 0; i < data4.length; i++) {
+				//第一列数据为已过去
+				if(i==0){
+					document.getElementById("passColor").style.backgroundColor = color4[i];
+					document.getElementById("pass").innerHTML="已过去："+data4[i]+"min";
+				}else{
+					document.getElementById("lessColor").style.backgroundColor = color4[i];
+					document.getElementById("less").innerHTML="还剩余："+data4[i]+"min";
+				}
+				ctx.beginPath();
+				ctx.moveTo(200, 150);
+				endPoint =  (data4[i]/dataCount4 * 2 + startPoint) ;
+				ctx.arc(200, 150, 150, startPoint * Math.PI , endPoint * Math.PI , false);
+				ctx.fillStyle = color4[i];
+				ctx.fill();
+				startPoint = endPoint;
+			}
+		}
+		
+		
+		function noonRest(){
+			//下午上班		
+			//[00 - 09][09 - 12][12 - 14][14 - 18][18 - 24]
+			var startdate = new Date();
+			startdate.setHours(9);
+			startdate.setMinutes(0);
+			var enddate = new Date();
+			enddate.setHours(12);
+			enddate.setMinutes(0);
+			//
+			var color4 = [ "#dcf5d8", "#8aff78" ];
+			var dataCount4 = allMin(startdate,enddate);
+			var d = min(startdate);
+			var data4 = [ d, dataCount4-d ];
+			if(dataCount4-d<=0){
+				//该时间段倒计时已结束
+				data4 = [ dataCount4, 0 ];
+				document.getElementById("title2").innerHTML = "午休时间已过!!! <sub>（计时已结束）</sub>";
+			}
+			tip4redrawing("中午 - 午休时间倒计时");
+			//
+			var canvas = document.getElementById("testcanvas2");
+			var ctx = canvas.getContext("2d");
+			//
+			var startPoint = 1.5;
+			for (var i = 0; i < data4.length; i++) {
+				//第一列数据为已过去
+				if(i==0){
+					document.getElementById("passColor2").style.backgroundColor = color4[i];
+					document.getElementById("pass2").innerHTML="已过去："+data4[i]+"min";
+				}else{
+					document.getElementById("lessColor2").style.backgroundColor = color4[i];
+					document.getElementById("less2").innerHTML="还剩余："+data4[i]+"min";
+				}
+				ctx.beginPath();
+				ctx.moveTo(200, 150);
+				endPoint =  (data4[i]/dataCount4 * 2 + startPoint) ;
+				ctx.arc(200, 150, 150, startPoint * Math.PI , endPoint * Math.PI , false);
+				ctx.fillStyle = color4[i];
+				ctx.fill();
+				startPoint = endPoint;
+			}
+		}
+		
+		
+		function morningWork(){
+			//下午上班		
+			//[00 - 09][09 - 12][12 - 14][14 - 18][18 - 24]
+			var startdate = new Date();
+			startdate.setHours(9);
+			startdate.setMinutes(0);
+			var enddate = new Date();
+			enddate.setHours(12);
+			enddate.setMinutes(0);
+			//
+			var color4 = [ "#f2e6be", "#fcd606" ];
+			var dataCount4 = allMin(startdate,enddate);
+			var d = min(startdate);
+			var data4 = [ d, dataCount4-d ];
+			if(dataCount4-d<=0){
+				//该时间段倒计时已结束
+				data4 = [ dataCount4, 0 ];
+				document.getElementById("title3").innerHTML = "午休时间!!! <sub>（计时已结束）</sub>";
+			}
+			tip4redrawing("上午 - 工作时间倒计时");
+			//
+			var canvas = document.getElementById("testcanvas3");
+			var ctx = canvas.getContext("2d");
+			//
+			var startPoint = 1.5;
+			for (var i = 0; i < data4.length; i++) {
+				//第一列数据为已过去
+				if(i==0){
+					document.getElementById("passColor3").style.backgroundColor = color4[i];
+					document.getElementById("pass3").innerHTML="已过去："+data4[i]+"min";
+				}else{
+					document.getElementById("lessColor3").style.backgroundColor = color4[i];
+					document.getElementById("less3").innerHTML="还剩余："+data4[i]+"min";
+				}
+				ctx.beginPath();
+				ctx.moveTo(200, 150);
+				endPoint =  (data4[i]/dataCount4 * 2 + startPoint) ;
+				ctx.arc(200, 150, 150, startPoint * Math.PI , endPoint * Math.PI , false);
+				ctx.fillStyle = color4[i];
+				ctx.fill();
+				startPoint = endPoint;
+			}
+		}
+		
+		
+		function noonWork4(){
+			//下午上班		
+			//[00 - 09][09 - 12][12 - 14][14 - 18][18 - 24]
+			var startdate = new Date();
+			startdate.setHours(14);
+			startdate.setMinutes(0);
+			var enddate = new Date();
+			enddate.setHours(18);
+			enddate.setMinutes(0);
+			//
+			var color4 = [ "#e5f9ff", "#78ddff" ];
+			var dataCount4 = allMin(startdate,enddate); //240
+			var d = min(startdate);
+			var data4 = [ d, dataCount4-d ];
+			if(dataCount4-d<=0){
+				//该时间段倒计时已结束
+				data4 = [ dataCount4, 0 ];
+				document.getElementById("title4").innerHTML = "现在已经下班了!!! <sub>（计时已结束）</sub>";
+			}
+			tip4redrawing("下午 - 工作时间倒计时");
+			//
+			var canvas = document.getElementById("testcanvas4");
+			var ctx = canvas.getContext("2d");
+			//
+			var startPoint = 1.5;
+			for (var i = 0; i < data4.length; i++) {
+				//第一列数据为已过去
+				if(i==0){
+					document.getElementById("passColor4").style.backgroundColor = color4[i];
+					document.getElementById("pass4").innerHTML="已过去："+data4[i]+"min";
+				}else{
+					document.getElementById("lessColor4").style.backgroundColor = color4[i];
+					document.getElementById("less4").innerHTML="还剩余："+data4[i]+"min";
+				}
+				ctx.beginPath();
+				ctx.moveTo(200, 150);
+				endPoint =  (data4[i]/dataCount4 * 2 + startPoint) ;
+				ctx.arc(200, 150, 150, startPoint * Math.PI , endPoint * Math.PI , false);
+				ctx.fillStyle = color4[i];
+				ctx.fill();
+				startPoint = endPoint;
+			}
+		}
+		
+		
+		function min(time){
+			var nt = new Date();
+			var ntt = new Date(nt.getFullYear()+"-"+(nt.getMonth()+1)+"-"+nt.getDate()+" "+nt.getHours()+":"+nt.getMinutes());
+			return parseInt((ntt.getTime() - time.getTime()) / 1000 /60 );
+			/* var nmin = new Date().getHours() * 60 + new Date().getMinutes() ;
+			var smin = time.getHours() * 60 + time.getMinutes() ;
+			return nmin - smin; */
+		}
+		function allMin(startTime,endTime){
+			return parseInt(endTime.getTime() - startTime.getTime()) / 1000 / 60 ;
+			
+		}
+		function tip4redrawing(pieName){
+			console.log("["+new Date().getFullYear()+"-"+(new Date().getMonth()+1)+"-"+new Date().getDate()+" "+new Date().getHours()+":"+new Date().getMinutes()+":"+new Date().getSeconds()+"] "+pieName+" redrawing...");
+		}
+		
+		//第一次显示
+		checkTime();
+		//重新设定刷新点
+		//减少延迟时间，将刷新间隔改为下一分的第2秒；
+		// （60 - 当前时间秒数 + 2） * 1000 
+		var ix = setTimeout("setInterval('checkTime()',60 * 1000)", (60 - new Date().getSeconds() + 2) * 1000 );
+		
+		function checkTime(){
+			var curt = new Date();
+			if(curt.getHours()<9 && curt.getMinutes()<59){
+				document.getElementById("noonwork").style.display = "none";
+				sleepingTime();
+				document.getElementById("sleeppingtime").style.display = "inline-block";
+			}else if(curt.getHours()<12 && curt.getMinutes()<59){
+				document.getElementById("sleeppingtime").style.display = "none";
+				morningWork();
+				document.getElementById("morningwork").style.display = "inline-block";
+			}else if(curt.getHours()<14 && curt.getMinutes()<59){
+				document.getElementById("morningwork").style.display = "none";
+				noonRest();
+				document.getElementById("noonrest").style.display = "inline-block";
+			}else if(curt.getHours()<18 && curt.getMinutes()<59){
+				document.getElementById("noonrest").style.display = "none";
+				noonWork4();
+				document.getElementById("noonwork").style.display = "inline-block";
+			}
+			
+		}
+		
+
+	
+</script>
+</body>
+</html>
