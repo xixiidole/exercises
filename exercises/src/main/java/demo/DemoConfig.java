@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.jfinal.config.*;
 import com.jfinal.core.Controller;
+import com.jfinal.render.ViewType;
 import com.jfinal.server.undertow.UndertowServer;
 import com.jfinal.template.Engine;
  
@@ -16,6 +17,7 @@ public class DemoConfig extends JFinalConfig {
  
     public void configConstant(Constants me) {
        me.setDevMode(true);
+       me.setViewType(ViewType.FREE_MARKER);
     }
     
     public void configRoute(Routes me) {

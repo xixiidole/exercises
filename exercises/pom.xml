@@ -27,6 +27,13 @@
 	    <version>3.6</version>
 	</dependency>
     
+    <dependency>
+        <groupId>org.freemarker</groupId>
+        <artifactId>freemarker</artifactId>
+        <version>2.3.20</version>
+    </dependency>
+
+    
     <!-- 如果需要 WebSocket 支持，再添加一个依赖，不开发 WebSocket 无需理会 -->
     <!--
     <dependency>

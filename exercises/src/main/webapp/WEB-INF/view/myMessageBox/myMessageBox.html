@@ -4,220 +4,24 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <title>startCountingdown</title>
 <style type="text/css">
-	.colorBlock{padding-left: 20px;}
-	.floating{float: left;}
-	.show-panel{
-		padding: 100px 100px;
-		height:300px;
-	}
-	/*cd里面的样式*/
-	.panel-inside{display: inline-table;}
-	.parts{display: inline-block;width:100%;height:100%;}
-	.pie{width:100%;height:100%;}
-	.tip{margin-top:10px;padding-left:50px;text-align:left;display:none;}
-	.centerTitle{text-align: center;width:100%;}
-	.curCD{width:200px;height:200px;font-size: 14px;color:#000000;}
-	.miniCD{width:150px;height:150px;font-size: 12px;color:#dddddd;}
+	.panel{width:500px;height:750px;padding:2px;margin: 3px auto;border:1px solid #000000;}
+	.insideBlock{height:50px;border:1px solid #000000;border-radius:10px;}
 </style>
 <script type="text/javascript" src="/resources/js/jquery-3.3.1.min.js"></script>
 <script type="text/javascript" src="/resources/js/messageBox.js"></script>
 </head>
 <body class="background">
-<div id="showPanel" class="show-panel">
-
+<div id="showPanel" class="panel">
+	<div class="insideBlock">
+		<div><span>2019-03-06</span></div>
+		<div>
+			问题见文档； -- 附卡地址一样的问题；
+		</div>
+	</div>
 </div>
 
 
 <script type="text/javascript">
-	
-	/* 计算当前时间与传入时间相差多少分钟 */
-	function min(time){
-		var nt = new Date();
-		var ntt = new Date(nt.getFullYear()+"-"+(nt.getMonth()+1)+"-"+nt.getDate()+" "+nt.getHours()+":"+nt.getMinutes());
-		return Math.ceil((ntt.getTime() - time.getTime()) / 1000 /60 );
-	}
-	/* 计算两个时间共相差多少分钟 */
-	function allMin(startTime,endTime){
-		return Math.ceil(endTime.getTime() - startTime.getTime()) / 1000 / 60 ;
-		
-	}
-	/* 打印日志 */
-	function tip4redrawing(pieName){
-		console.log("["+new Date().getFullYear()+"-"+(new Date().getMonth()+1)+"-"+new Date().getDate()+" "+new Date().getHours()+":"+new Date().getMinutes()+":"+new Date().getSeconds()+"] "+pieName+" redrawing...");
-	}
-	//由于canvas每当高度或宽度被重设时，画布内容就会被清空，因此可以用以下方法清空
-	/* 清理画布 */
-	function clearCanvas(id){  
-	    var c=document.getElementById(id);  
-	    var cxt=c.getContext("2d");  
-	    c.height=c.height;  
-	} 
-	
-	//准备数据
-	//时间
-	var timeArray = [
-		{'timeName':'做梦时间!!!','timeCode':'sleepingTime','startHours':'0','startMin':'0','endHours':'8','endMin':'59'},
-		{'timeName':'上午工作时间!!!','timeCode':'morningWorkTime','startHours':'9','startMin':'0','endHours':'11','endMin':'59'},
-		{'timeName':'午休时间!!!','timeCode':'noonRestTime','startHours':'12','startMin':'0','endHours':'13','endMin':'59'},
-		{'timeName':'下午工作时间!!!','timeCode':'noonWorkTime','startHours':'14','startMin':'0','endHours':'18','endMin':'13'},
-		{'timeName':'自由时间!!!','timeCode':'freeTime','startHours':'18','startMin':'14','endHours':'23','endMin':'59'}
-	];
-	//显示
-	//大小饼图尺寸
-	var pieSize = [[75,75,50],[100,100,80]]
-	//颜色10 组
-	var pieColor = [[ "#cbd9ff", "#5c88ff" ],[ "#f2e6be", "#fcd606" ],[ "#e5f9ff", "#78ddff" ],[ "#ffdada", "#ff9696" ],["#c1ffc2", "#aae9ab"],["#2F368F" , "#2CA8E0"],["#27255F", "#77D1F6" ],["#2F368F", "#77D1F6"],["#27255F", "#2F368F"]];
-	
-	$(function(){
-		
-		//遍历时间生成canvas
-		for(var x = 0 ; x < timeArray.length ; x++){
-			var tj = timeArray[x];
-			var divx = '<div id="'+ tj.timeCode +'" class="panel-inside miniCD">'+
-							'<div id="'+ tj.timeCode +'Title" class="centerTitle" >'+ tj.timeName +'</div>'+
-							'<canvas id="'+ tj.timeCode +'Canvas" width="150" height="150">您的浏览器暂不支持Canvas</canvas>'+
-							'<div id="'+ tj.timeCode +'Tip" class="parts tip" >'+
-								'<span style="display: block; ">'+
-									'<a class="colorBlock" id="'+ tj.timeCode +'PassColor"> </a>'+
-									'<span id="'+ tj.timeCode +'Pass">已过去：??</span>'+
-								'</span>'+
-								'<span style="display: block;margin-top:20px;">'+
-									'<a class="colorBlock" id="'+ tj.timeCode +'LessColor"> </a>'+
-									'<span id="'+ tj.timeCode +'Less">还剩余：??</span>'+
-								'</span>'+
-							'</div>'+
-						'</div>';
-			//添加到显示panel
-			$("#showPanel").append(divx);
-			
-			//drawPie
-			drawPie(tj.timeName, tj.timeCode, tj.startHours, tj.startMin, tj.endHours, tj.endMin, pieColor[x], pieSize[0]);
-		}
-		//setInterval 会有一次延时，所以第一下手动执行;
-		//将interval延时时间设置为每分钟开始后的第2秒，这样也达到了减少延迟的目的
-		var ix = setTimeout("checkRedraw();setInterval('checkRedraw();',60 * 1000)", (60 - new Date().getSeconds() + 2) * 1000 );
-		
-		
-		//
-		
-		
-		
-	});
-	
-	function drawPie(timeName, timeCode, startHours, startMin, endHours, endMin, colorCode, pieSize){
-		//		
-		var startdate = new Date();
-		startdate.setHours(startHours);
-		startdate.setMinutes(startMin);
-		//去除秒钟
-		startdate.setSeconds(0);
-		var enddate = new Date();
-		enddate.setHours(endHours);
-		enddate.setMinutes(endMin);
-		enddate.setSeconds(0);
-		//
-		var color = colorCode;
-		var dataCount = allMin(startdate,enddate);
-		var d = min(startdate);
-		var data = [ d, dataCount-d ];
-		
-		//
-		var startPoint = 1.5;
-		//
-		var pointX = pieSize[0];
-		var pointY = pieSize[1];
-		var radius = pieSize[2];
-		
-		//
-		$("#"+timeCode+"Tip").show();
-		
-		if(dataCount-d<=0){
-			console.log("end1");
-			//该时间段倒计时已结束
-			data = [ dataCount, 0 ];
-			$("#"+timeCode+"Title").html("<s>"+timeName+"</s>");
-			//已结束隐藏
-			$("#"+timeCode+"Tip").hide();
-			//判断不为当前后，更新样式
-			$("#"+timeCode).removeClass("curCD").addClass("miniCD");
-			//计算出当前高宽
-			var pX = window.pieSize[0][0] * 2;
-			var pY = window.pieSize[0][1] * 2;
-			$("#"+timeCode+"Canvas").attr("height",pX).attr("width",pY);
-			
-			pointX = window.pieSize[0][0];
-			pointY = window.pieSize[0][1];
-			radius = window.pieSize[0][2];
-			
-		}else if(d<0){
-			console.log("end2");
-			data = [ 0 , dataCount ];
-			$("#"+timeCode+"Title").html(timeName);
-			//未开始隐藏
-			$("#"+timeCode+"Tip").hide();
-			//判断不为当前后，更新样式
-			$("#"+timeCode).removeClass("curCD").addClass("miniCD");
-			//计算出当前高宽
-			var pX = window.pieSize[0][0] * 2;
-			var pY = window.pieSize[0][1] * 2;
-			$("#"+timeCode+"Canvas").attr("height",pX).attr("width",pY);
-			
-			pointX = window.pieSize[0][0];
-			pointY = window.pieSize[0][1];
-			radius = window.pieSize[0][2];
-			
-		}else{
-			//判断为当前后，更新样式
-			$("#"+timeCode).removeClass("miniCD").addClass("curCD");
-			//计算出当前高宽
-			var pX = window.pieSize[1][0] * 2;
-			var pY = window.pieSize[1][1] * 2;
-			$("#"+timeCode+"Canvas").attr("height",pX).attr("width",pY);
-			
-			pointX = window.pieSize[1][0];
-			pointY = window.pieSize[1][1];
-			radius = window.pieSize[1][2];
-			
-		}
-		tip4redrawing(timeName+"倒计时");
-		//
-		var canvas = document.getElementById(timeCode+"Canvas");
-		var ctx = canvas.getContext("2d");
-		
-		for (var i = 0; i < data.length; i++) {
-			//第一列数据为已过去
-			if(i==0){
-				$("#"+timeCode+"PassColor").css("backgroundColor",color[i]);
-				$("#"+timeCode+"Pass").html("已过去："+data[i]+"min");
-			}else{
-				$("#"+timeCode+"LessColor").css("backgroundColor",color[i]);
-				$("#"+timeCode+"Less").html("还剩余："+data[i]+"min");
-			}
-			ctx.beginPath();
-			ctx.moveTo(pointX, pointY);
-			endPoint =  (data[i]/dataCount * 2 + startPoint) ;
-			ctx.arc(pointX, pointY, radius, startPoint * Math.PI , endPoint * Math.PI , false);
-			ctx.fillStyle = color[i];
-			ctx.fill();
-			startPoint = endPoint;
-		}
-		
-	}
-	
-	function checkRedraw(){
-		//遍历时间生成canvas
-		for(var x = 0 ; x < timeArray.length ; x++){
-			var tj = timeArray[x];
-			//当前时间
-			var curt = new Date();
-			//这个判断对时间有顺序要求，如果不确定时间，可以将开始时间也加入判断
-			//只是希望单个刷新所以加了个判断
-			if(curt.getHours()<=tj.endHours && curt.getMinutes()<=tj.endMin){
-				drawPie(tj.timeName, tj.timeCode, tj.startHours, tj.startMin, tj.endHours, tj.endMin, pieColor[x], pieSize[1]);
-				break;
-			}
-		}
-	}
 	
 </script>
 </body>
