@@ -71,7 +71,7 @@
 		{'timeName':'做梦时间!!!','timeCode':'sleepingTime','startHours':'0','startMin':'0','endHours':'8','endMin':'59'},
 		{'timeName':'上午工作时间!!!','timeCode':'morningWorkTime','startHours':'9','startMin':'0','endHours':'11','endMin':'59'},
 		{'timeName':'午休时间!!!','timeCode':'noonRestTime','startHours':'12','startMin':'0','endHours':'13','endMin':'59'},
-		{'timeName':'下午工作时间!!!','timeCode':'noonWorkTime','startHours':'14','startMin':'0','endHours':'18','endMin':'59'},
+		{'timeName':'下午工作时间!!!','timeCode':'noonWorkTime','startHours':'14','startMin':'0','endHours':'17','endMin':'59'},
 		{'timeName':'自由时间!!!','timeCode':'freeTime','startHours':'18','startMin':'0','endHours':'23','endMin':'59'}
 	];
 	//显示
@@ -83,6 +83,9 @@
 	$(function(){
 		
 		entrance();
+		
+		
+		getWeather();
 		
 	});
 	
@@ -243,6 +246,22 @@
 			startPoint = endPoint;
 		}
 		
+	}
+	
+	function getWeather(){
+		var city = "长沙";
+		$.ajax({
+			url:"/getWeather",
+			type:"post",
+			data:{
+				city:city
+			},
+			success:function(data){
+				console.log(1);
+			},error:function(){
+				
+			}
+		})
 	}
 </script>
 </body>

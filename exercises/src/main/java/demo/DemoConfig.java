@@ -1,10 +1,10 @@
 package demo;
-import java.lang.reflect.Constructor;
-import java.util.List;
-import java.util.Set;
-
-import com.jfinal.config.*;
-import com.jfinal.core.Controller;
+import com.jfinal.config.Constants;
+import com.jfinal.config.Handlers;
+import com.jfinal.config.Interceptors;
+import com.jfinal.config.JFinalConfig;
+import com.jfinal.config.Plugins;
+import com.jfinal.config.Routes;
 import com.jfinal.render.ViewType;
 import com.jfinal.server.undertow.UndertowServer;
 import com.jfinal.template.Engine;

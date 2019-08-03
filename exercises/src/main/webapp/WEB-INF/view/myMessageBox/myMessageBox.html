@@ -4,25 +4,96 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <title>startCountingdown</title>
 <style type="text/css">
-	.panel{width:500px;height:750px;padding:2px;margin: 3px auto;border:1px solid #000000;}
-	.insideBlock{height:50px;border:1px solid #000000;border-radius:10px;}
+	.panel{width:500px;height:750px;padding:5px;margin: 3px auto;border: 1px solid #ddd;}
+	.panelTitle{padding: 5px 3px;font-weight: bolder;font-size: 25px;border-bottom: 1px solid #ddd;margin-bottom: 5px;}
+	.insideBlock{height:70px;width:500px;border:1px solid #ddd;margin-bottom: 5px;border-radius:3px;padding-bottom: 3px; position: absolute; /* background:rgba(195, 221, 255, 0.67); */}
+	.boxShadow{box-shadow: 0px 0px 9px 6px inset #ddd;}
+	.infoSpace{padding: 3px 5px;}
 </style>
 <script type="text/javascript" src="/resources/js/jquery-3.3.1.min.js"></script>
 <script type="text/javascript" src="/resources/js/messageBox.js"></script>
 </head>
 <body class="background">
 <div id="showPanel" class="panel">
-	<div class="insideBlock">
-		<div><span>2019-03-06</span></div>
-		<div>
+	<div class="panelTitle">发的所发生的</div>
+	<div class="insideBlock" id="XXX" style="top:63px">
+		<div class="infoSpace"><span>2019-03-06</span></div>
+		<div class="infoSpace">
 			问题见文档； -- 附卡地址一样的问题；
+		</div>
+	</div>
+	<div class="insideBlock" style="top:143px">
+		<div class="infoSpace"><span>2019-03-06</span></div>
+		<div class="infoSpace">
+			问题见文档121； -- 附卡地址一样的问题222；
 		</div>
 	</div>
 </div>
 
 
 <script type="text/javascript">
-	
+	$(".insideBlock").each(function(){
+		$(this).bind('mousedown', function (e) {
+			ismoving = true;
+			cmo = $(this);
+			curY = e.pageY;
+			curX = e.pageX;
+			//元素top
+			curY = parseInt($(this).css("top").replace("xp"));
+			curX = parseInt($(this).css("left").replace("xp"));
+			//原始鼠标点
+			orgY = e.pageY;
+			orgX =e.pageX;
+		});
+	});
+	var ismoving = false;
+	var cmo = "";
+	var curY =0;
+	var curX = 0;
+	/* $("#XXX").bind('mousedown', function (e) {
+		ismoving = true;
+		cmo = "XXX";
+		curY = e.pageY;
+		curX = e.pageX;
+		//元素top
+		curY = parseInt($(this).css("top").replace("xp"));
+		curX = parseInt($(this).css("left").replace("xp"));
+		//原始鼠标点
+		orgY = e.pageY;
+		orgX =e.pageX;
+	}); */
+	$("body").bind("mousemove",function(e){
+		if(ismoving){
+			cmo.css("top",curY + e.pageY - orgY );
+		}
+	});
+	$("body").bind('mouseup', function (e) {
+		
+		ismoving = false;
+		cmo = "";
+		curY = 0;
+		curX = 0;
+		orderItem();
+	});
+	function orderItem(){
+		var firstTop = 63;
+		var height = 80;
+		var topArray = [];
+		$(".insideBlock").each(function(){
+			var curTop = $(this).offset().top;
+			topArray.push(curTop);
+			var moveTo = curTop-firstTop;
+			if(moveTo<firstTop){
+				moveTo = firstTop;
+			}else{
+				var x = Math.floor(curTop/height)-1;
+				moveTo = x*height+firstTop;
+				console.log("MT:"+moveTo);
+				$(this).animate({top:moveTo+"px"});
+			}
+		});
+		//$(this).animate({top:"100px"});
+	}
 </script>
 </body>
 </html>

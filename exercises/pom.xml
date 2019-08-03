@@ -33,7 +33,60 @@
         <version>2.3.20</version>
     </dependency>
 
-    
+	<dependency>
+	    <groupId>org.apache.axis</groupId>
+	    <artifactId>axis</artifactId>
+	    <version>1.4</version>
+	</dependency>
+	
+	<dependency>
+         <groupId>org.apache.axis</groupId>
+         <artifactId>axis-jaxrpc</artifactId>
+         <version>1.4</version>
+     </dependency>
+     
+	<dependency>
+	    <groupId>commons-logging</groupId>
+	    <artifactId>commons-logging</artifactId>
+	    <version>1.1.1</version>
+	</dependency>
+	
+	<dependency>
+		<groupId>org.apache.commons</groupId>
+		<artifactId>commons-lang3</artifactId>
+		<version>3.3.2</version>
+	</dependency>
+	
+	<dependency>
+            <groupId>commons-discovery</groupId>
+            <artifactId>commons-discovery</artifactId>
+            <version>0.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        
+		<dependency>
+            <groupId>wsdl4j</groupId>
+            <artifactId>wsdl4j</artifactId>
+            <version>1.4</version>
+        </dependency>
+        
+        <dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>1.4</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>javax.activation</groupId>
+		    <artifactId>activation</artifactId>
+		    <version>1.1.1</version>
+		</dependency>
+		
     <!-- 如果需要 WebSocket 支持，再添加一个依赖，不开发 WebSocket 无需理会 -->
     <!--
     <dependency>
