@@ -1,6 +1,7 @@
 package demo;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -17,6 +18,7 @@ import java.util.zip.ZipFile;
 import com.jfinal.core.ActionKey;
 import com.jfinal.core.Controller;
 
+
 import demo.Utils.getWeatherUtil;
 
 public class CountingDownController extends Controller {
@@ -28,7 +30,6 @@ public class CountingDownController extends Controller {
 	public void index() {
        renderText("Not In Here!");
     }
-	
 
 	@ActionKey("/todo")
 	public void todo() {
