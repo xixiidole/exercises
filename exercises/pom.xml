@@ -87,6 +87,7 @@
 		    <version>1.1.1</version>
 		</dependency>
 		
+
     <!-- 如果需要 WebSocket 支持，再添加一个依赖，不开发 WebSocket 无需理会 -->
     <!--
     <dependency>
@@ -95,6 +96,17 @@
 	    <version>2.0.17.Final</version>
 	</dependency>
 	-->
+
+	<dependency>
+	    <groupId>org.apache.poi</groupId>
+	    <artifactId>poi</artifactId>
+	    <version>4.0.1</version>
+	</dependency>
+	<dependency>
+	    <groupId>org.apache.poi</groupId>
+	    <artifactId>poi-ooxml</artifactId>
+	    <version>4.0.1</version>
+	</dependency>
 	
   </dependencies>
   <build>
