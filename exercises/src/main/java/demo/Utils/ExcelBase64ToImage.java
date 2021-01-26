@@ -8,7 +8,6 @@ import java.io.OutputStream;
 import java.util.Base64;
 import java.util.Base64.Decoder;
 
-import org.apache.poi.util.StringUtil;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;

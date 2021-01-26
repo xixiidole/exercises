@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        body{
+            margin: 0;
+            padding: 0;
+        }
+        canvas{
+            border: 1px solid black;
+        }
+        #sel_col li{
+            list-style: none;
+            width: 30px;
+            height: 30px;
+            border-radius:30px ;
+            float: left;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+        #sel_wid{
+            width: 200px;
+            margin-left: 200px;
+        }
+        #sel_wid li{
+            list-style: none;
+            background: black;
+            float: left;
+            margin-left: 10px;
+            cursor: pointer;
+
+        }
+        #list{
+            margin-left: 100px;
+        }
+        #list li{
+            list-style: none;
+            float: left;
+            width: 100px;
+            height: 30px;
+            border-radius:5px;
+            background: grey;
+            margin-left: 10px;
+            color: white;
+            line-height: 30px;
+            text-align: center;
+        }
+        #list li:hover{
+            cursor: pointer;
+            background: orangered;
+        }
+
+    </style>
+</head>
+<body>
+<canvas width="800" height="600" id="canvas1"></canvas>
+<ul id="sel_col">
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+</ul>
+<ul id="sel_wid">
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+</ul>
+<ul id="list">
+<li id='a1'>画笔</li>
+<li id='a2' >直线</li>
+<li id='a3' >清空</li>
+<li id="clear">橡皮</li>
+</ul>
+</body>
+</html>
+<script>
+    window.onload=function() {
+        var v_canvas=document.getElementById("canvas1");
+        var a1=document.getElementById("a1");
+        var a2=document.getElementById("a2");
+        var clear=document.getElementById("clear");
+        var context=v_canvas.getContext("2d");
+        var cha={
+            col:'red',
+            wid:5,
+            last:'red'
+        };
+        document.onmousedown = function (e) {
+            if(a1.style.backgroundColor=='red'||clear.style.backgroundColor=='red'){
+                e = e || window.e;
+                if (e.button == 0) {
+                    context.beginPath();
+                    context.moveTo(e.pageX, e.pageY);
+                    document.onmousemove = function (e) {
+                        context.lineTo(e.pageX, e.pageY);
+                        context.strokeStyle = cha.col;
+                        context.lineWidth = cha.wid;
+                        context.stroke();
+                    };
+                    document.onmouseup = function (){
+                        context.closePath();
+                        document.onmousemove = function (){
+                            return false;
+                        }
+                    }
+                }
+            }
+            else if(a2.style.backgroundColor=='red'){
+                e = e || window.e;
+                if (e.button == 0) {
+                    context.beginPath();
+                    context.moveTo(e.pageX, e.pageY);
+                    document.onmousemove = function (e) {
+                    };
+                    document.onmouseup = function (e){
+                        context.lineTo(e.pageX, e.pageY);
+                        context.strokeStyle = cha.col;
+                        context.lineWidth = cha.wid;
+                        context.stroke();
+                        context.closePath();
+                        document.onmousemove = function (){
+
+                            return false;
+                        }
+                    }
+                }
+            }
+        };
+        var sel_col=document.getElementById('sel_col').children;
+        var sel_wid=document.getElementById('sel_wid').children;
+        var list=document.getElementById('list').children;
+        for(var k=0;k<list.length;k++){
+            list[k].c=k;
+            list[k].onclick=function(){
+                list[this.c].style.backgroundColor='red';
+                if(this.c==2){
+                    var v_canvas=document.getElementById("canvas1");
+                    var a1=document.getElementById("a1");
+                    var context=v_canvas.getContext("2d");
+                    context.clearRect(0,0,800,600);
+                }
+                if(this.c==3){
+                    cha.last=cha.col;
+                    cha.col='white';
+                }
+                for(var s=0;s<list.length;s++){
+                    if(this.c!=s){
+                        list[s].style.backgroundColor='grey';
+                    }
+                    if(this.c!=3){
+                        cha.col=cha.last;
+                    }
+                }
+            }
+        }
+        var arr=['blue','green','red','orange'];
+        var arr1=[5,10,15,20];
+        for(var i=0;i<arr.length;i++){
+            sel_col[i].a=i;
+            sel_col[i].style.backgroundColor=arr[i];
+            sel_col[i].onclick=function(){
+                if(clear.style.backgroundColor!='red'){
+                    cha.col=arr[this.a];
+                }
+
+            }
+        }
+        for(var j=0;j<arr1.length;j++){
+            sel_wid[j].b=j;
+            sel_wid[j].style.width=arr1[j]+'px';
+            sel_wid[j].style.height=arr1[j]+'px';
+            sel_wid[j].style.borderRadius=arr1[j]+'px';
+            sel_wid[j].onclick=function(){
+                cha.wid=arr1[this.b];
+            }
+        }
+    };
+</script>

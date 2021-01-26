@@ -1,0 +1,78 @@
+<!DOCTYPE>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>undoneThings</title>
+<style type="text/css">
+	.colorBlock{padding-left: 20px;}
+	.floating{float: left;}
+	.tip{margin-top:100px;}
+	.centerTitle{text-align: center;}
+</style>
+<script type="text/javascript" src="/resources/js/jquery-3.3.1.min.js"></script>
+</head>
+<body class="background">
+	<input type="hidden" id="JSID" name="JSID" value="${JSID!}" />
+	<div id="undoneList" style="width:700px;heigth:100%;margin: 3px auto;background-color: #dedede;">
+		ffffffff
+	</div>
+	<script type="text/javascript">
+		function getUndoneData(){
+			var settings = {
+					  "async": true,
+					  "crossDomain": true,
+					  "url": "http://dev.gklqt.com:58082/jira/rest/issueNav/1/issueTable",
+					  "method": "POST",
+					  "type":"jsoup",
+					  "headers": {
+					    "Accept": "*/*",
+					    "Accept-Encoding": "gzip, deflate",
+					    "Accept-Language": "zh-CN,zh;q=0.9",
+					    "Connection": "keep-alive",
+					    "Content-Length": "131",
+					    "Content-Type": "text/plain",
+					    "Host": "dev.gklqt.com:58082",
+					    "Origin": "http://dev.gklqt.com:58082",
+					    "Referer": "http://dev.gklqt.com:58082/jira/issues/?filter=-1",
+					    "User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36",
+					    "X-Atlassian-Token": "nocheck",
+					    "X-Requested-With": "XMLHttpRequest",
+					    "Cookie": "JSESSIONID=B7BB83C773A9102F625DB7904FB09FCE,JSESSIONID=B7BB83C773A9102F625DB7904FB09FCE; JSESSIONID=E493E3BBE6A42684115B8F29AABAA553; atlassian.xsrf.token=B5KX-G33A-RGYP-HX5A|8fd8fe268a34c76314ed25be9485a7458fc56d44|lin",
+					    "Cache-Control": "no-cache",
+					    "Postman-Token": "190513f3-1813-4da8-bb41-b0ab0d9d2d18,624584fb-4077-4f1c-83ca-17a44c5392b8",
+					    "cache-control": "no-cache"
+					  },
+					  "data": "startIndex=0&filterId=-1&jql=assignee+%3D+currentUser()+AND+resolution+%3D+Unresolved+ORDER+BY+updatedDate+DESC&layoutKey=list-view"
+					}
+
+					$.ajax(settings).done(function (response) {
+					  console.log(response);
+					  //$("#undoneList").html();
+					});
+			
+			//$("#undoneList").load("/undoneData?JSID="+$('#JSID').val(),function(){
+				
+			//});
+			/* $.ajax({
+				url:"/undoneData",
+				type:"POST",
+				data:{
+					"JSID":$("#JSID").val()
+				},
+				success:function(data){
+					console.log(data);
+				},
+				error:function(){
+					
+				}
+			}); */
+		}
+		
+		$(function(){
+			if($("#JSID").val()){
+				getUndoneData();
+			}
+		});
+	</script>
+</body>
+</html>
