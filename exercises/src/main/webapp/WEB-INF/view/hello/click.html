@@ -11,43 +11,274 @@
 	.container{
 		text-align: center;
 	}
+	.circle{
+		border: 3px solid #014f6b;
+	    border-radius: 50px;
+	    display: inline-block;
+	    height: 75px;
+	    width: 75px;
+	}
+	.ring{
+		padding: 3px 3px;
+		cursor: pointer;
+	}
 	.clickBtn{
-		margin-top: 250px;
+		position: relative;
+		top: 260px;
+		left: 45%;
+	}
+	.btn{
+		position: absolute;
+		top: 22px;
+		left: 22px;
+		z-index: 2;
+	}
+	.animateCircle {
+		position: absolute;
+		width: 121px;
+		height: 121px;
+		border: 4px solid #014f6b;
+		-webkit-border-radius: 50%;
+		-moz-border-radius: 50%;
+		border-radius: 50%;
+		left: 1px;
+		top: 1px;
+		z-index: 1;
+		transform: scale(0.7);
+    	opacity: 0.7;
+		transition-property: all;
+		transition-duration: 1s;
+		-moz-transition-property: all; /* Firefox 4 */
+		-moz-transition-duration: 1s; /* Firefox 4 */
+		-webkit-transition-property: all; /* Safari and Chrome */
+		-webkit-transition-duration: 1s; /* Safari and Chrome */
+		-o-transition-property: all; /* Opera */
+		-o-transition-duration: 1s; /* Opera */
+		box-shadow: 1px 1px 30px red;
 	}
 	.clickCount{
-		font-weight: bold;
+		position: absolute;
+	    font-weight: bold;
 	    font-size: 14px;
-	    top: 20%;
+	    top: 50px;
 	    text-align: center;
 	    background-color: #f3f2f2;
 	    padding: 5px 15px;
 	    width: 300px;
-	    margin: auto;
-	    margin-top: 100px;
+	    left: 39%;
 	    border: 1px solid #dcdcdc;
-    	border-radius: 5px;
-    	display: none;
+	    border-radius: 5px;
+	    opacity:0;
+	}
+	.comboPart{
+		height:30px;
+		color: rgb(255, 43, 51);
+	}
+	.comboCount{
+		position: relative;
+	    left: 48%;
+	    top: 100px;
+	    width: 300px;
+	    display: none;
+	}
+	.popIcon{
+		position: absolute;
+		/*top: 28px;*/
+	    /*left: 28px;*/
+	    top: 50px;
+    	left: 50px;
+	    z-index: 1;
+    }
+	.iconDiv{
+		position: absolute;
+	    width: 5px;
+	    height: 5px;
+	}
+	.icon1{
+	    background: url(/resources/imgs/popIcons/picon1.png) no-repeat;
+	    background-size:75px 75px;  
+	    opacity:0;
+	}
+	.icon2{
+	    background: url(/resources/imgs/popIcons/picon2.png) no-repeat;
+	    background-size:75px 75px;  
+	    opacity:0;
+	}
+	.icon3{
+	    background: url(/resources/imgs/popIcons/picon3.png) no-repeat;
+	    background-size:75px 75px;  
+	    opacity:0;
+	}
+	.icon4{
+	    background: url(/resources/imgs/popIcons/picon4.png) no-repeat;
+	    background-size:75px 75px;  
+	    opacity:0;
+	}
+	.icon5{
+	    background: url(/resources/imgs/popIcons/picon5.png) no-repeat;
+	    background-size:75px 75px;  
+	    opacity:0;
+	}
+	.icon6{
+	    background: url(/resources/imgs/popIcons/picon6.png) no-repeat;
+	    background-size:75px 75px;  
+	    opacity:0;
+	}
+	.icon7{
+	    background: url(/resources/imgs/popIcons/picon7.png) no-repeat;
+	    background-size:75px 75px;  
+	    opacity:0;
+	}
+	.icon8{
+	    background: url(/resources/imgs/popIcons/picon8.png) no-repeat;
+	    background-size:75px 75px;  
+	    opacity:0;
+	}
+	.icon9{
+	    background: url(/resources/imgs/popIcons/picon3.png) no-repeat;
+	    background-size:75px 75px;  
+	    opacity:0;
+	}
+	.icon10{
+	    background: url(/resources/imgs/popIcons/picon10.png) no-repeat;
+	    background-size:75px 75px;  
+	    opacity:0;
+	}
+	.icon11{
+	    background: url(/resources/imgs/popIcons/picon11.png) no-repeat;
+	    background-size:75px 75px;  
+	    opacity:0;
+	}
+	.icon12{
+	    background: url(/resources/imgs/popIcons/picon12.png) no-repeat;
+	    background-size:75px 75px;  
+	    opacity:0;
 	}
 </style>
 </head>
 <body>
-
 	<div class="container">
-		<div class="clickCount" >
-			<span id="ccn"></span>
+		<div class="countPart"></div>
+		<div class="comboPart">
+			<div class="comboCount" ></div>
 		</div>
 		<div class="clickBtn" >
-			<img alt="clickMe" src="/resources/imgs/clickBtn2.png" onclick="clickM();"></img>
+			<div id="btn" class="btn">
+				<img alt="clickMe" src="/resources/imgs/clickBtn.png" class="btnImg circle ring" width="75" height="75" onclick="clickM();"></img>
+			</div>
+			<div class="popIcon"></div>
 		</div>
-	
 	</div>
+	
 	<script type="text/javascript" src="/resources/js/jquery-3.3.1.min.js"></script>
 	<script type="text/javascript">
 		var count = 0;
+		var combo = 0;
 		function clickM(){
+			//生成圈圈并执行动画
+			$('<div class="animateCircle circle'+count+'"></div>').appendTo(".clickBtn");
+			setTimeout(function(){
+				var x = count;
+				$('.circle'+(x-1))[0].style.transform = "scale(1)";
+				$('.circle'+(x-1))[0].style.opacity = "0";
+				//动画完成清除自己
+				setTimeout(function(){
+					$('.circle'+(x-1)).remove();
+				},1100);
+			},100);
 			count++;
-			$("#ccn").html(count);
-			$(".clickCount").slideDown();
+			//点击次数count
+			var x = $('<div class="clickCount" ><span>'+count+'</span></div>').appendTo(".countPart");
+			x.animate({top:"70px",opacity:"1",fontSize:"18px"},100).animate({fontSize:"18px"},500).animate({fontSize:"14px"},50).animate({top:"10px",opacity:"0"},200,function(){
+				this.remove();
+				var x2 = count;
+				$(".circle"+x2).remove();
+				//这里当自己清理市触发判断下
+				if($(".countPart").find("div").length==0){
+					//没有div就清理下连击数
+					combo = 0;
+					$(".comboCount").slideUp("fast").html("");
+				}
+			});
+			showCombo();
+			popIcon();
+		}
+		function showCombo(){
+			if($(".countPart").find("div").length>0){
+				combo++;
+				if(combo>1)$(".comboCount").html("连击+"+combo);
+				$(".comboCount").show("fast");
+			}else{
+				//估摸着这里可能不会进来
+				combo=0;
+				$(".comboCount").slideUp("fast").html("");
+			}
+		}
+		//图标
+		var iconIndex = [1,2,3,4,5,6,7,8,9,10,11,12];
+		//射出角度
+		var degrees = [60,90,120,240,270,300];
+		//半径，射出距离
+		var r= 130;
+		//当前圆心位置手动识别偏移为-26；
+		var o = -26;
+		//消失动画1：随机角度弹出，上浮消失,2：随机角度弹出，奇怪的消失；3：沿随机射出方向消失；4：直接向上弹出消失
+		var anima = 4;
+		//
+		function popIcon(){
+			
+			//添加弹出图标
+			//随机图标
+			var i = parseInt(Math.random()*iconIndex.length+1);
+			var icon = $("<div class='iconDiv icon"+i+"'></div>");
+			icon.appendTo(".popIcon");
+			//设置动画
+			if(anima == 4){
+				icon.animate({width:"75px",height:"75px",opacity:"1",top:"-150px",left:o+"px"},500).animate({top:"-250px",opacity:"0"},600,function(){
+					this.remove();
+				});
+				//这个不用继续往下走
+				return;
+			}
+			if(anima == 2 || anima == 3){
+				//射的远点
+				r= 300;
+			}
+			//计算圆周上的点
+			//Math.sin(x)      x 的正玄值。返回值在 -1.0 到 1.0 之间；
+			//Math.cos(x)	x 都是指的“弧度”而非“角度”，弧度的计算公式为： 2*PI/360*角度；
+			//r=100
+			//随机角度
+			var p = parseInt(Math.random()*degrees.length);
+			//算弧度
+			var hd = 2*Math.PI/360*degrees[p];
+			//圆周上的点
+			var x = Math.floor(Math.sin(hd)*r)+o;
+			var y = Math.floor(Math.cos(hd)*r);
+			//判断动画
+			if(anima==1){
+				x= x+"px";
+				y= y+"px";
+				icon.animate({width:"75px",height:"75px",opacity:"1",top:y,left:x},300).animate({top:"-250px",opacity:"0"},500,function(){
+					this.remove();
+				});
+			}else if(anima==2){
+				var halfx = parseInt(x/2)+"px";
+				var halfy = parseInt(y/2)+"px";
+				x= x+"px";
+				y= y+"px";
+				icon.animate({width:"75px",height:"75px",opacity:"1",top:halfy,left:halfx},500).animate({top:y,opacity:"0"},500,function(){
+					this.remove();
+				});
+			}else if(anima==3){
+				var halfx = parseInt(x/2)+"px";
+				var halfy = parseInt(y/2)+"px";
+				x= x+"px";
+				y= y+"px";
+				icon.animate({width:"75px",height:"75px",opacity:"1",top:halfy,left:halfx},500).animate({top:y,left:x,opacity:"0"},500,function(){
+					this.remove();
+				});
+			}
 		}
 	</script>
 </body>

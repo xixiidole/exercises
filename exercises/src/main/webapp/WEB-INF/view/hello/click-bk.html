@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>CLICK</title>
+<style>
+	@keyframes warn1 {
+         0% {
+             transform: scale(0.6);
+             -webkit-transform: scale(0.6);
+             opacity: 0.0;
+         }
+
+         25% {
+             transform: scale(0.6);
+             -webkit-transform: scale(0.6);
+             opacity: 0.6;
+         }
+
+         100% {
+             transform: scale(1);
+             -webkit-transform: scale(1);
+             opacity: 0.0;
+         }
+     }
+	body{
+		width:100%;
+		height:100%;
+	}
+	.container{
+		text-align: center;
+	}
+	.circle{
+		border: 3px solid #014f6b;
+	    border-radius: 50px;
+	    display: inline-block;
+	    height: 75px;
+	    width: 75px;
+	}
+	.ring{
+		padding: 3px 3px;
+		cursor: pointer;
+	}
+	.clickBtn{
+		position: relative;
+		top: 260px;
+		left: 45%;
+	}
+	.btn{
+		position: absolute;
+		top: 22px;
+		left: 22px;
+		z-index: 2;
+	}
+	.circle1 {
+		position: relative;
+		width: 121px;
+		height: 121px;
+		border: 4px solid #014f6b;
+		-webkit-border-radius: 50%;
+		-moz-border-radius: 50%;
+		border-radius: 50%;
+		left: 1px;
+		top: 1px;
+		z-index: 1;
+		opacity: 0;
+		-webkit-animation: warn1 2s ease-out;
+		-moz-animation: warn1 2s ease-out;
+		animation: warn1 2s ease-out;
+		-webkit-animation-iteration-count: infinite;
+		-moz-animation-iteration-count: infinite;
+		animation-iteration-count: infinite;
+		box-shadow: 1px 1px 30px red;
+	}
+	.clickCount{
+		position: absolute;
+	    font-weight: bold;
+	    font-size: 14px;
+	    top: 50px;
+	    text-align: center;
+	    background-color: #f3f2f2;
+	    padding: 5px 15px;
+	    width: 300px;
+	    left: 39%;
+	    border: 1px solid #dcdcdc;
+	    border-radius: 5px;
+	    opacity:0;
+	}
+	.comboPart{
+		height:30px;
+		color: rgb(255, 43, 51);
+	}
+	.comboCount{
+		position: relative;
+	    left: 48%;
+	    top: 100px;
+	    width: 300px;
+	    display: none;
+	}
+</style>
+</head>
+<body>
+	<div class="container">
+		<div class="countPart"></div>
+		<div class="comboPart">
+			<div class="comboCount" ></div>
+		</div>
+		<div class="clickBtn" >
+			<div class="btn">
+				<img alt="clickMe" src="/resources/imgs/clickBtn.png" class="btnImg circle ring" width="75" height="75" onclick="clickM();"></img>
+			</div>
+			<div class="circle1"></div>
+			<div class="popIcon"></div>
+		</div>
+	</div>
+	
+	<script type="text/javascript" src="/resources/js/jquery-3.3.1.min.js"></script>
+	<script type="text/javascript">
+		var count = 0;
+		var combo = 0;
+		function clickM(){
+			//$(".btnImg").animate({width:"70px",height:"70px"},10).animate({width:"80px",height:"80px"},10).animate({width:"75px",height:"75px"},10);
+			$(".circle1")[0].style.width="120px";
+			$(".circle1")[0].style.height="120px";
+			count++;
+			$("#ccn").html(count);
+			var x = $('<div class="clickCount" ><span>'+count+'</span></div>').appendTo(".countPart");
+			x.animate({top:"70px",opacity:"1",fontSize:"18px"},100).animate({fontSize:"18px"},500).animate({fontSize:"14px"},50).animate({top:"10px",opacity:"0"},200,function(){
+				this.remove();
+				//这里当自己清理市触发判断下
+				if($(".countPart").find("div").length==0){
+					//没有div就清理下连击数
+					combo = 0;
+					$(".comboCount").slideUp("fast").html("");
+				}
+			});
+			showCombo();
+		}
+		function showCombo(){
+			if($(".countPart").find("div").length>0){
+				combo++;
+				if(combo>1)$(".comboCount").html("连击+"+combo);
+				$(".comboCount").show("fast");
+			}else{
+				//估摸着这里可能不会进来
+				combo=0;
+				$(".comboCount").slideUp("fast").html("");
+			}
+		}
+		var iconIndex = [1,2,3,4,5,6,7,8,9,10,11,12];
+		var points = [{top:100,left:200},{top:100,left:400}]
+		function popIcon(){
+		}
+	</script>
+</body>
+</html>
