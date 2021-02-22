@@ -24,7 +24,7 @@ public class DemoConfig extends JFinalConfig {
     	me.setMappingSuperClass(false);
         me.setBaseViewPath("/WEB-INF/view");
         //me.addInterceptor();
-       me.add("/hello", HelloController.class);
+       me.add("/", HelloController.class);
        me.add("/countingDown", CountingDownController.class);
        me.add("/myMessageBox", MyMessageBoxController.class);
         

@@ -20,7 +20,7 @@ import com.jfinal.core.Controller;
 public class HelloController extends Controller {
 	
 	public void index() {
-	       renderText("Hello JFinal World.");
+		//renderText("Hello JFinal World.");
 	}
 	
 	public void test() {
@@ -28,21 +28,29 @@ public class HelloController extends Controller {
 		renderText("Hello JFinal World2.");
 	}
 	
+	@ActionKey("/doodle")
 	public void doodle(){
-		render("doodle.html");
+		render("hello/doodle.html");
 	}
 	
+	@ActionKey("/iframe")
 	public void iframe(){
-		render("iframe.html");
+		render("hello/iframe.html");
 	}
 	
+	@ActionKey("/spin")
 	public void bigPrice(){
-		render("spin.html");
+		render("hello/spin.html");
 	}
 	
 	@ActionKey("/click")
 	public void click(){
-		render("click.html");
+		render("hello/click.html");
+	}
+	
+	@ActionKey("/music")
+	public void music(){
+		render("hello/music.html");
 	}
 	
 	@ActionKey("/undoneData")
