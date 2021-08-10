@@ -1,4 +1,4 @@
-package demo;
+package demo.controller;
 
 import com.jfinal.core.ActionKey;
 import com.jfinal.core.Controller;

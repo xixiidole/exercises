@@ -55,6 +55,9 @@
 	<div class="sea"></div>
 	<script type="text/javascript" src="/resources/js/jquery-3.3.1.min.js"></script>
 	<script type="text/javascript">
+		$(function(){
+			
+		});
 		function showSquare(){
 			var posX = 0, posY = 0;
 			var event = event || window.event;
@@ -68,8 +71,16 @@
 			var x = $("<div class='heightLight' style='top:"+(posY+"px")+";left:"+(posX+"px")+"'></div>");
 			x.appendTo(".box");
 			x.animate({height:"50px",width:"50px",top:(posY-26)+"px",left:(posX-26)+"px"},200).animate({opacity:"0"},500,function(){
-				//this.remove();
+				this.remove();
 			})
+		}
+		function showSquare(posX){
+			var posY = 0;
+			var x = $("<div class='heightLight' style='top:"+(posY+"px")+";left:"+(posX+"px")+"'></div>");
+			x.appendTo(".box");
+			x.animate({height:"50px",width:"50px",top:(posY-26)+"px",left:(posX-26)+"px"},200).animate({opacity:"0"},500,function(){
+				this.remove();
+			});
 		}
 	</script>
 </body>

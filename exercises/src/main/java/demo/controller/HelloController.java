@@ -1,12 +1,19 @@
-package demo;
+package demo.controller;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -16,6 +23,14 @@ import okhttp3.Response;
 
 import com.jfinal.core.ActionKey;
 import com.jfinal.core.Controller;
+import com.jfinal.kit.PathKit;
+import com.jfinal.kit.StrKit;
+import com.jfinal.plugin.activerecord.Record;
+import com.jfinal.upload.UploadFile;
+
+import demo.service.BillService;
+import demo.service.FileService;
+import freemarker.template.utility.StringUtil;
 
 public class HelloController extends Controller {
 	
@@ -166,5 +181,86 @@ public class HelloController extends Controller {
         return sb.toString();
     }
 	
+	@ActionKey("/quickbill")
+	public void bill(){
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String offset = getPara("offset");
+		Date d = new Date();
+		if(StrKit.notBlank(offset)){
+			setAttr("offset", offset);
+			Calendar c = Calendar.getInstance();
+			c.add(Calendar.DATE, Integer.parseInt(offset));
+			d = c.getTime();
+		}
+		//默认当天
+		Record today = BillService.checkToday(sdf.format(d));
+		setAttr("date", sdf.format(d));
+		setAttr("bill", today);
+		render("hello/billShotcut.html");
+	}
+	
+	@ActionKey("/inputBill")
+	public void inputBill(){
+		Record r = new Record();
+		try{
+			String name = getPara("name");
+			String cost = getPara("cost");
+			String type = getPara("type");
+			Integer offset = getParaToInt("offset");
+			r = BillService.inputBill(name, cost, type, offset);
+		}catch(Exception e){
+			r.set("result", "error");
+			r.set("msg", e.getMessage());
+		}
+		renderJson(r);
+	}
+	
+	@ActionKey("/updateBill")
+	public void updateBill(){
+		Record r = new Record();
+		try{
+			String name = getPara("name");
+			String date = getPara("date");
+			String cost = getPara("cost");
+			r = BillService.updateBill(name, date, cost);
+		}catch(Exception e){
+			r.set("result", "error");
+			r.set("msg", e.getMessage());
+		}
+		renderJson(r);
+	}
+	
+	@ActionKey("/fileCabinet")
+	public void fileCabinet(){
+		render("hello/fileCabinet.html");
+	}
+	
+	/**
+	 * 上传
+	 */
+	@ActionKey("/fileUpload")
+	public void fileUpload(){
+		
+		Record r = new Record();
+		try{
+			List<UploadFile> files = getFiles();
+			Record uploadResult = FileService.startUpload(files);
+			renderJson(uploadResult);
+		}catch(Exception e){
+			e.printStackTrace();
+			r.set("result", "error");
+			r.set("msg", "上传失败："+e.getMessage());
+			renderJson(r);
+		}
+	}
+	
+	/**
+	 * fileList
+	 */
+	@ActionKey("/fileList")
+	public void fileList(){
+		Map<String, List<Record>> fileList = FileService.getFileList(3);
+		renderJson(fileList);
+	}
 	
 }

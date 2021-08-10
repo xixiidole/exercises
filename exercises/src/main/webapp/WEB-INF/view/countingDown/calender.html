@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>日历</title>
+<style>
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, fieldset, input, textarea, p, blockquote, th, td {
+    margin: 0;
+    padding: 0;
+    font-size: 10px;
+}
+a:hover {
+    text-decoration: none;
+}
+.calenderTitle{
+	width:60%;
+	margin: auto;
+	margin-top:2%;
+}
+.calenderPart{
+	width:60%;
+	margin: auto;
+	margin-top:1%;
+	border-right: 1px solid #000;
+	border-top: 1px solid #000;
+	border-spacing: 0;
+	border-collapse: collapse;
+}
+.calenderPart tr td{
+	border-bottom: 1px solid #000;
+	border-left: 1px solid #000;
+	height: 50px;
+	width: 10%;
+	text-align: center;
+}
+
+.days{display: inline-block;}
+.work{background-color: #ffe1e1 !important;}
+.weekend{background-color: #f7f3c2;border-right: 1px solid #000;}
+.holiday{background-color: #bff5bf;border-right: 1px solid #000;}
+.note,.day{display: block;}
+
+.passed{color: #8e8c8c;}
+.today{background-color: #6cd2f0 !important;}
+
+.other{margin-left: 20px;}
+
+.tips{
+	border: 1px solid #ddd;
+	padding: 2px 5px;
+	border-radius: 4px;
+	cursor: pointer;
+	display: inline-block;
+	margin-bottom: 5px;
+}
+.tips:hover{background-color: #d2f2fb;}
+.yearDuration{
+    height: 30px;
+    width: 60%;
+    margin: auto;
+    margin-top: 30px;
+    padding:0px 30px;
+}
+.jdt{
+	height: 10px;
+	border: 1px solid #000;
+	border-radius:5px;
+}
+.pass{
+    height: inherit;
+	background-color: #6cd2f0;
+}
+.passTip{
+	position:relative;
+}
+.hardTime{
+	display: block;
+    width: 50px;
+    background-color: #ff5454;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+}
+</style>
+</head>
+<body>
+	<div id="yearDuration" class="yearDuration">
+		<div>
+			<div class="passTip"></div>
+		</div>
+		<div class="jdt"><div class="pass"></div></div>
+	</div>
+	<table class="calenderTitle">
+		<tr>
+			<td>
+				<select id="year">
+					<option value="2021">2021</option>
+				</select> - 
+				<select id="month" onchange="getData();">
+					<option value=""></option>
+					<option value="01">01</option>
+					<option value="02">02</option>
+					<option value="03">03</option>
+					<option value="04">04</option>
+					<option value="05">05</option>
+					<option value="06">06</option>
+					<option value="07">07</option>
+					<option value="08">08</option>
+					<option value="09">09</option>
+					<option value="10">10</option>
+					<option value="11">11</option>
+					<option value="12">12</option>
+				</select>
+				
+				<span class="other">
+					今天：
+				</span>
+			</td>
+		</tr>
+	</table>
+	<table id="x" class="calenderPart">
+		<thead>
+			<tr>
+				<td>星期一</td>
+				<td>星期二</td>
+				<td>星期三</td>
+				<td>星期四</td>
+				<td>星期五</td>
+				<td class="weekend">星期六</td>
+				<td class="weekend">星期天</td>
+			</tr>
+		</thead>
+		<tbody id="days">
+		</tbody>
+	</table>
+	
+	<script type="text/javascript" src="/resources/js/jquery-3.3.1.min.js"></script>
+	<script type="text/javascript">
+		$(function(){
+			getData();
+		});
+		var cm = "";
+		var _kyo = "";
+		function getData(){
+			$.ajax({
+				url:"/calenderData",
+				data:{
+					'year':($("#year option:selected").val()?$("#year option:selected").val():""),
+					'month':($("#month option:selected").val()?$("#month option:selected").val():"")
+				},
+				dataType:"json",
+				success:function(data){
+					$("#year").html("<option value='"+data.year+"'>"+data.year+"</option>");
+					cm = data.month;
+					_kyo = data.current.year+"-"+data.current.month+"-"+data.current.date;
+					$("#month option[value='"+data.month+"']").attr("selected","selected");
+					var tbody = GenTable(data);
+					$("#days").append(tbody);
+					showHoliday(data);
+					showWOB();
+					//setTimeout("tip()",1000);
+					showYearDuration();
+				},error:function(){
+					alert("error");
+				}
+			});
+		}
+		function GenTable(data){
+			$("#days").html("");
+			//今天
+			$(".other").html("<span class='tips' title='(๑¯◡¯๑)'>今天："+data.current.year+"-"+data.current.month+"-"+data.current.date+"</span>");
+			var tbody = "<tr>";
+			if(data){
+				var maxDays = parseInt(data.maxdate);
+				var startWeek = parseInt(data.startWeek);
+				var allDays = maxDays+startWeek-1;//加上开始的格子数
+				allDays = allDays+(7-allDays%7);//加上日期结束后的格子数
+				var cr = 1;		//当前行
+				var cd = 1;	//显示的day
+				var iscurMonth = false;
+				if(data.current.year == data.year && data.current.month == data.month ){
+					iscurMonth = true;
+				}
+				for(var x = 1;x<=allDays;x++){
+					if(cr==1){
+						//第一行的情况下
+						if(x>=startWeek){
+							//到开始的星期几，开始显示号数 //(cd<data.date?" passed":"")+(cd==data.date?" today":"")
+							tbody += "<td class='"+(iscurMonth && cd==data.current.date?" today":"")+(iscurMonth && cd<data.current.date?" passed":"")+(x%7==6||x%7==0?" weekend":"")+"'><span class='D"+data.year+data.month+dayFormat(cd)+" days'><span class='day'>"+cd+"</span><span class='note'>&nbsp;</span></span></td>";
+							cd++;
+						}else{
+							//没有到开始的星期几，就显示空格子
+							tbody += "<td></td>";
+						}
+					}else{
+						if(cd<=maxDays){
+							tbody += "<td class='"+(iscurMonth && cd==data.current.date?" today":"")+(iscurMonth && cd<data.current.date?" passed":"")+(x%7==6||x%7==0?" weekend":"")+"'><span class='D"+data.year+data.month+dayFormat(cd)+" days'><span class='day'>"+cd+"</span><span class='note'>&nbsp;</span></span></td>";
+							cd++;
+						}else{
+							tbody += "<td></td>";//后面的格子
+						}
+					}
+					if(x%7==0){
+						cr+=1;
+						//换行
+						tbody += "</tr><tr>";
+					}
+				}
+				tbody += "</tr>";
+			}
+			//
+			return tbody;
+		}
+		function showHoliday(data){
+			if(data && data.holiday){
+				for(var x = 0;x<data.holiday.length;x++){
+					var c = data.holiday[x].date.replace(/-/g,"");
+					var work = data.holiday[x].work;
+					var note = (data.holiday[x].note?data.holiday[x].note:"&nbsp;");
+					if(work=="1"){
+						$(".D"+c).parent().addClass("work");
+					}else if(work=="0"){
+						//work==0表示放假
+						$(".D"+c).parent().addClass("holiday");
+					}
+					$(".D"+c).find(".note").html(note);
+				}
+			}
+			if(data.current.year == data.year && data.current.month == data.month ){
+				tip();//相同月份才提示，不然假期计算有问题，懒得查数据库判断
+			}
+		}
+		function tip(){
+			var msg = "";
+			var eh = $(".calenderPart tbody tr td").hasClass("holiday");//本月内是否有holiday
+			var npd = $(".calenderPart tbody tr td:not(.passed):has(span)");//没有过的holiday
+			var bb = false;
+			var fj = false;
+			var nfjd = 0;
+			for(var i=0;i<npd.length;i++){
+				if($(npd[i]).hasClass("holiday")){
+					fj =true;
+					nfjd = i;
+					break;
+				}
+				if($(npd[i]).hasClass("work")){
+					bb =true;
+					break;
+				}
+			}
+			if(!eh){
+				msg += "<span class='tips' title='（￣□￣；）'>本月很平静没有节假日！（￣□￣；）祈祷这周末不加班吧！</span>&emsp;";
+				if(bb){
+					msg += "<span class='tips' title='。゜゜(´Ｏ`) ゜゜。'>但还要补班/加班，你敢信！¯་། ¯||| 当我前面的没说吧...</span>&emsp;";
+				}
+			}else{
+				if(!fj){
+					msg += "<span class='tips' title='_(:3 」∠)_'>本月内已经没有节假日了，祈祷这周末不加班吧！_(:3 」∠)_</span>&emsp;";
+					if(bb){
+						msg += "<span class='tips' title='ε(┬┬﹏┬┬)3'>假期没了，但还要补班，你敢信！ε(┬┬﹏┬┬)3</span>&emsp;";
+					}
+				}else{
+					msg += "<span class='tips' title='ԅ( ¯་། ¯ԅ)'>ԅ( ¯་། ¯ԅ)距离下次节假日放假还有"+nfjd+"天！</span>&emsp;";
+				}
+			}
+			
+			var wd = $(".today").parent().find("td:not(.passed):not(.holiday):not(.weekend):has(span)").length;
+			wd += $(".today").parent().find("td.work").length;
+			if(wd>1){
+				msg += "&emsp;<span class='tips' title='(๑•̀ㅂ•́)و✧'>(๑•̀ㅂ•́)و✧本周还要工作"+wd+"天！</span>&emsp;";
+			}else if(wd==1){
+				//周日加班不用显示，所以加这个判断
+				if($(".today").next().length>0){
+					msg += "&emsp;<span class='tips' title='开心*.。(๑･∀･๑)*.。'>*.。(๑･∀･๑)*.。明天就放假（周末）了！</span>&emsp;";
+				}
+			}else{
+				msg += "&emsp;<span class='tips' title='我要躺一天！'>_(:⑧」∠)_！</span>&emsp;";
+			}
+			
+			$(".other").html($(".other").html()+"<br/>"+msg);
+		}
+		function dayFormat(day){
+			return ("00"+day).slice(-2);
+		}
+		function showYearDuration(){
+			var x = cm/12*100;
+			$(".pass").css("width",x+"%");
+			$(".passTip").html("今年已过"+x+"%");
+			$(".passTip").css("padding-left",(x-4)+"%");
+		}
+		/*显示加班按钮*/
+		function showWOB(){
+			if($(".today").hasClass("weekend")){
+				var noteV = $(".today").find(".note").html();
+				if(noteV=="加班"){
+					$(".today").find(".note").html("<a class='hardTime' onclick='hardTime(0);' >加班</a>");
+				}else{
+					$(".today:not(.holiday):not(.work)").find(".note").html("<a class='hardTime' onclick='hardTime();' >加班？</a>");
+				}
+			}
+		}
+		function hardTime(work){
+			var tip = "确定将今日设置为加班日？";
+			if("0"==work){
+				tip = "确定取消今天的加班日？";
+			}
+			if(confirm(tip)){
+				$.ajax({
+					url:"/hardTime",
+					data:{
+						"date":_kyo,
+						"work":(work==undefined?"":work)
+					},
+					dataType:"JSON",
+					success:function(result){
+						if(result.result=="success"){
+							location.reload();
+						}else{
+							alert("哎呦！出问题了！错误信息："+result.msg);
+						}
+					},
+					error:function(){
+						alert("哎呦！出问题了！");
+					}
+				});
+			}
+		}
+	</script>
+</body>
+</html>

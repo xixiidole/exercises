@@ -1,12 +1,5 @@
-package demo;
+package demo.controller;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -16,18 +9,18 @@ import java.util.Vector;
 
 import javax.xml.namespace.QName;
 
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-
+import com.jfinal.aop.Before;
 import com.jfinal.core.ActionKey;
 import com.jfinal.core.Controller;
+import com.jfinal.kit.StrKit;
+import com.jfinal.plugin.activerecord.Record;
+import com.jfinal.plugin.activerecord.tx.Tx;
 
 import demo.Utils.getWeatherUtil;
+import demo.service.CalendarService;
 
 public class CountingDownController extends Controller {
+	
 	@ActionKey("/CD")
 	public void cdp() {
        render("cdp3.html");
@@ -84,9 +77,44 @@ public class CountingDownController extends Controller {
 		String JSID = getPara("JSID");
 		setAttr("JSID", JSID);
 		render("undoneThings.html");
-    }
+	}
 	
+	@ActionKey("/calender")
+	public void calender() {
+		render("calender.html");
+	}
 	
+	@ActionKey("/calenderData")
+	public void calendarData(){
+		String year = getPara("year");
+		String month = getPara("month");
+		String json = CalendarService.calendarData(year,month);
+		renderJson(json);
+	}
 	
+	/**
+	 * 设置加班，work为空默认为：1（加班）；传0取消加班记录
+	 */
+	@ActionKey("/hardTime")
+	@Before(Tx.class)
+	public void hardTime(){
+		Record r = new Record();
+		try{
+			String date = getPara("date");
+			String work = getPara("work","1");
+			if(!StrKit.isBlank(date)){
+				CalendarService.hardTime(date, work);
+				r.set("result", "success");
+			}else{
+				r.set("result", "error");
+				r.set("msg", "未获取到设置日期！无法设置！");
+			}
+		}catch(Exception e){
+			r.set("result", "error");
+			r.set("msg", e.getMessage());
+		}
+		
+		renderJson(r);
+	}
 	
 }

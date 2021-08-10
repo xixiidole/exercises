@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+<title>文件上传</title>
+<style>
+html,body{
+	height:100%;
+	width:100%;
+	margin: 0;
+    padding: 0;
+    font-size: 15px;
+}
+.parts{
+	float: left;
+	height:100%;
+}
+.filebox{
+	padding:40px;
+	margin: auto;
+}
+.dropArea{
+	border: 3px dashed #ddd;
+    width: 260px;
+    text-align: center;
+    padding: 65px 0px;
+}
+.border{
+	border-left: 1px solid #000;
+}
+.cabinet{
+	padding:30px;
+}
+.group{
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+    font-size: 108%;
+    font-weight: 500;
+    height: 48px;
+    line-height: 48px;
+    overflow: hidden;
+    padding: 0 20px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.files{
+	border-radius: 5px;
+    box-shadow: 1px 1px 9px 3px #e8e8e8;
+    margin-bottom: 20px;
+    position: relative;
+}
+.type{
+	padding: 0px 10px;
+	background-color: #e4f1e6;
+	margin-right: 10px;
+}
+.file{
+	align-items: center;
+    font-size: 108%;
+    font-weight: 500;
+    height: 48px;
+    line-height: 48px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    /*不设置这个，里面的进度条背景的宽度就会以显示器的宽度为准，导致超出范围*/
+    position: relative;
+}
+.file:hover{
+	background-color: #ddd;
+}
+.name{
+	display: inline-block;
+    width: 70%;
+}
+.size{
+	font-size: 90%;
+}
+.download{
+	position: absolute;
+    right: 20px;
+    font-size: 90%;
+    color: #a4d9ea;
+    cursor: pointer;
+}
+.download:hover{
+	color: #fff;
+}
+.info{
+	padding: 0 20px;
+}
+.uploadBtn{
+	color: #0dd1da;
+	position: absolute;
+    right: 20px;
+	cursor:pointer;
+	display: none;
+}
+.progressBar{
+	background-color: #cfe5ff;
+	position: absolute;
+	height:inherit;
+	z-index: -1;
+}
+</style>
+</head>
+<body>
+	<div class="parts">
+		<div class="filebox">
+			<div  id="drop_area" class="dropArea">将文件拖拽到此</div>  
+		</div>
+	</div>
+	<div class="parts" style="width:60%;">
+		<div class="cabinet">
+			<div class="">
+				<div class="files">
+					<div class="group">待上传文件<a id="uploadBtn" class="uploadBtn" onclick="startUpload();">上传</a></div>
+					<div id="PTUF" class="list">
+					</div>
+				</div>
+			</div>
+			<div class="uploaded">
+				<div class="files">
+					<div class="group">无上传文件记录</div>
+					<div class="list">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" src="/resources/js/jquery-3.3.1.min.js"></script>
+	<script type="text/javascript">
+		$(function(){
+			document.addEventListener("drop",function(e){  //拖离   
+			    e.preventDefault();      
+			});
+			document.addEventListener("dragleave",function(e){  //拖后放   
+			    e.preventDefault();      
+			});
+			document.addEventListener("dragenter",function(e){  //拖进  
+			    e.preventDefault();      
+			});
+			document.addEventListener("dragover",function(e){  //拖来拖去    
+			    e.preventDefault();      
+			});
+			choosenFiles = [];
+			uploadFiles = [];
+			
+			var box = document.getElementById('drop_area'); //拖拽区域     
+			box.addEventListener("drop",function(e){           
+			    var fileList = e.dataTransfer.files; //获取文件对象    
+			    //检测是否是拖拽文件到页面的操作            
+			    if(fileList.length == 0){                
+			        return false;            
+			    }             
+			    /*
+			    //拖拉图片到浏览器，可以实现预览功能    
+			    //规定视频格式  
+			    Array.prototype.S=String.fromCharCode(2);  
+			    Array.prototype.in_array=function(e){  
+			        var r=new RegExp(this.S+e+this.S);  
+			        return (r.test(this.S+this.join(this.S)+this.S));  
+			    };  
+			    console.log(Array.prototype);
+			    var video_type=["video/mp4","video/ogg"];  
+			    console.log(fileList[0]);
+			     //创建一个url连接,供src属性引用  
+			    var fileurl = window.URL.createObjectURL(fileList[0]);                
+			    if(fileList[0].type.indexOf('image') === 0){  //如果是图片  
+			        var str="<img width='200px' height='200px' src='"+fileurl+"'>";  
+			        document.getElementById('drop_area').innerHTML=str;                   
+			    }else if(video_type.in_array(fileList[0].type)){   //如果是规定格式内的视频                    
+			        var str="<video width='200px' height='200px' controls='controls' src='"+fileurl+"'></video>";  
+			        document.getElementById('drop_area').innerHTML=str;
+			    }else{ 
+			    	var fn = fileList[0].name;
+			        var str='<div class="file"><a class="type pdf">'+(fn.indexOf(".")>0?fn.substring(fn.indexOf(".")):'unknown')+'</a><a class="name">'+fn+'</a></div>';  
+			        $('#PTUF').append(str);  
+			    } */
+			    Array.prototype.S=String.fromCharCode(2);  
+			    Array.prototype.in_array=function(e){  
+			        var r=new RegExp(this.S+e+this.S);  
+			        return (r.test(this.S+this.join(this.S)+this.S));  
+			    };
+			    for(var x=0; x<fileList.length;x++){
+			    	
+				    var fn = fileList[x].name;
+				    if(choosenFiles.in_array(fn)){
+				    	alert("文件已被添加！");
+				    	return;
+				    }
+				    choosenFiles.push(fn);
+			        var str='<div  class="file"><div class="progressBar"></div><div class="info"><a class="type '+(fn.lastIndexOf(".")>0?fn.substring(fn.lastIndexOf(".")+1):'unknown')+'"></a><a class="name">'+fn+'</a></div></div>';  
+			        $('#PTUF').append(str);  
+			        //显示上传按钮
+			        $("#uploadBtn").show();
+				    //resultfile = fileList[0];
+				    uploadFiles.push(fileList[x]);
+				    
+			    }
+			},false); 
+			
+			getFileList();
+			
+		});
+		function startUpload(){
+			var filesCount = 0;
+			if(uploadFiles.length>0){
+				$("#uploadBtn").html("正在上传...");
+				document.getElementById("uploadBtn").onclick = function(){};
+				//filesCount = uploadFiles.length;
+				var fd = new FormData();
+				for (var i = 0; i < uploadFiles.length; i++){
+					fd.append('file['+i+']',uploadFiles[i]);
+				}
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        var data = JSON.parse(xhr.responseText);
+                        if (data.result == "success") {
+                            //批量上传成功
+                            //处理成功后的逻辑
+                            //TODO:.......
+                            alert("上传成功！");
+                            $("#PTUF").find(".file").slideUp('slow').remove();
+                            choosenFiles = [];
+                            uploadFiles = [];
+                        }
+                        else alert(data.msg);
+                    }
+                }
+                //侦查当前附件上传情况 可以设置进度条
+                xhr.upload.onprogress = function (evt) {  
+                    var loaded = evt.loaded;//已经上传大小情况
+                    var tot = evt.total;//附件总大小
+                    var per = Math.floor(100 * loaded / tot);  //已经上传的百分比，如35
+                    //console.log(per+"--"+filesCount);
+                    $("#PTUF").find(".progressBar").css("width",per+"%");
+                    //之前明明有遇到过打印了多次100的情况，可现在这里只有全部上传完之后才会打印100
+                    /*if(per==100){
+                    	++filesCount;
+	                    console.log(""+filesCount);
+                    } */
+                    if(per==100){
+                    	$("#uploadBtn").html("上传");
+                    	document.getElementById("uploadBtn").onclick = function(){startUpload();};
+                    	getFileList();
+                    }
+                }
+                xhr.open("post", '/fileUpload');
+                xhr.send(fd);
+			}
+		}
+		function getFileList(){
+			$.ajax({
+				url:"/fileList",
+				dataType:"json",
+				success:function(data){
+					console.log(data);
+					//这里为空不清理，这个data不能用js直接判断
+					if(JSON.stringify(data)!="{}"){
+						var fileList = $('<div class="files">');
+						//清理
+						$(".uploaded").html("");
+						for(var key in data){
+							var group = $('<div class="group">'+key+'上传</div>');
+							var list = $('<div class="list">');
+							var files = data[key];
+							if(files.length>0){
+								for(var y=0;y<files.length;y++){
+									var file = '<div class="file">'+
+													'<div class="progressBar"></div>'+
+													'<div class="info"><a class="type '+(files[y].name.lastIndexOf(".")>0?files[y].name.substring(files[y].name.lastIndexOf(".")+1):'unknown')+'"></a><a class="name">'+files[y].name+'</a><a class="size">大小：'+size(files[y].size)+'</a><a class="download" onclick="download(\''+files[y].uid+'\')" >点击下载</a></div>'+
+												'</div>';
+									list.append(file);
+								}
+							}
+							fileList.append(group);
+							fileList.append(list);
+						}
+						$(".uploaded").append(fileList);
+					}
+				},
+				error:function(){
+					alert("获取上传文件列表失败！")
+				}
+			})
+		}
+		function size(b){
+			if(b<1024)return b+"字节";
+			if(b<1048576)return (Math.floor(b*100/1024)/100)+"KB";
+			return (Math.floor(b*100/1024/1024)/100)+"M";
+		}
+	</script>
+</body>
+</html>
