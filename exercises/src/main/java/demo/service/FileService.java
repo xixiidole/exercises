@@ -18,6 +18,7 @@ import java.util.UUID;
 
 import com.jfinal.aop.Before;
 import com.jfinal.kit.PathKit;
+import com.jfinal.kit.PropKit;
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
@@ -39,7 +40,7 @@ public class FileService {
 		}else{
 			//拼接时间
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			fileLoc+="uploadFiles"+File.separator+sdf.format(new Date());
+			fileLoc+=File.separator+"uploadFiles"+File.separator+sdf.format(new Date());
 		}
 		File p = new File(fileLoc);
 		if(!p.exists()){
@@ -70,11 +71,14 @@ public class FileService {
 	}
 	
 	public static String getFileFolderPath(){
-		String path = PathKit.class.getClassLoader().getResource("").getPath();
-		if(path.startsWith("/")){
-			return path.substring(1);
+		String string = PropKit.use("uploadfile.properties").get("fileLoc");
+		if(StrKit.isBlank(string)){
+			String path = PathKit.class.getClassLoader().getResource("").getPath();
+			if(path.startsWith("/")){
+				return path.substring(1);
+			}
 		}
-		return path;
+		return string;
 	}
 	
 	/**
@@ -83,7 +87,7 @@ public class FileService {
 	 * @return
 	 */
 	public static Map<String, List<Record>> getFileList(int days){
-		String sql = "select * from files f2 where f2.uploadDt in ( select uploadDt from (select distinct f.uploadDt from files f order by f.uploadDt limit ? ) as x ) order by uploadTime desc";
+		String sql = "select * from files f2 where f2.uploadDt in ( select uploadDt from (select distinct f.uploadDt from files f order by f.uploadDt desc limit ? ) as x ) order by uploadTime desc";
 		List<Record> data = Db.find(sql, days);
 		Map<String, List<Record>> mapList = toMapList(data);
 		return mapList;
@@ -103,6 +107,21 @@ public class FileService {
 			}
 		}
 		return f1;
+	}
+	
+	public static File getFile(String fid){
+		String sql = "select * from files where uid='"+fid+"'";
+		Record record = Db.findFirst(sql);
+		File f = null;
+		if(null!=record && StrKit.notBlank(record.getStr("location"))){
+			f= new File(record.getStr("location"));
+			if(f.exists()){
+				return f;
+			}else{
+				f=null;
+			}
+		}
+		return f;
 	}
 	
 }

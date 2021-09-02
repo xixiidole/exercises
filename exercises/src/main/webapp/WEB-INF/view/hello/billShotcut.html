@@ -13,11 +13,13 @@ body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, fieldset, 
 .box{
 	width:380px;
 	/* height:200px; */
-	position: absolute;
+	/* position: absolute;
     top: 60px;
     left: 0;
-    right: 0;
+    right: 0; */
+    float: left;
     margin-left: 50px;
+    padding: 30px 20px;
 }
 .box div{
 	padding-left: 6px;
@@ -60,7 +62,7 @@ input[type='button']{
 	text-align: right;
 	padding-right: 20px;
 }
-.cost{
+.cost,.monthCost{
 	display: inline-block;
 	width:70px;
 	text-align: left;
@@ -73,6 +75,18 @@ input[type='button']{
     text-align: center;
     border-left: 1px solid #ddd;
     cursor: pointer;
+}
+.statistics,.statisticsPieMonth{
+	/* position: absolute;
+    left: 460px; */
+    float: left;
+    padding-top: 50px;
+    margin-left: 50px;
+}
+.statisticsMonth{
+	clear: both;
+    padding: 30px 20px;
+    margin-left: 50px;
 }
 </style>
 </head>
@@ -91,19 +105,39 @@ input[type='button']{
 		<div class="costCount">
 			<span>今日共计消费：</span><span class="cost">${(bill.allCost)!0}元</span>
 		</div>
+		<div class="costCount">
+			<span>本月已花费：</span><span class="monthCost">${(monthCost)!0}元</span>
+		</div>
 	</div>
 	
 	<div class="statistics">
-		
+		稍等，正在统计近7天消费情况...
+	</div>
+	
+	<!-- 
+	<div class="statisticsMonth">
+		稍等，正在统计当前月消费情况...
+	</div>
+	 -->
+	 
+	 <div class="statisticsPieMonth">
+		稍等，正在统计当前月消费情况...
 	</div>
 	
 	<script type="text/javascript" src="/resources/js/jquery-3.3.1.min.js"></script>
-	<script type="text/javascript" src="/resources/js/diystatistics.js"></script>
+	<script type="text/javascript" src="/resources/js/canvasjs.min.js"></script>
 	<script type="text/javascript">
 		var offset = ${(offset)!0};
 		var allCost = ${(bill.allCost)!0};
+		var monthCost = ${(monthCost)!0};
 		$(function(){
 			clear();
+			
+			statistic();
+			
+			//statisticMonth();
+			
+			statisticPieMonth();
 		});
 		function input(tipId,name,type,cost,ele){
 			$(ele).attr("disabled","disabled");
@@ -122,8 +156,10 @@ input[type='button']{
 						success:function(result){
 							if(result.result=="success"){
 								allCost += parseFloat(result.cost);
+								monthCost += parseFloat(result.cost);
 								$("#"+tipId).html("已录入；金额："+result.cost+"元");
 								refreshCost();
+								statistic();
 							}else{
 								$("#"+tipId).html("好像没录入成功，刷新下看看！");
 								$(ele).removeAttr("disabled","disabled");
@@ -167,6 +203,7 @@ input[type='button']{
 		}
 		function refreshCost(){
 			$(".cost").html(allCost+"元");
+			$(".monthCost").html(monthCost+"元");
 		}
 		function fixThis(ele,name,date,cost,tipId){
 			if($(ele).parent().find(".tips")=="未录入"){
@@ -186,8 +223,11 @@ input[type='button']{
 					success:function(result){
 						if(result.result=="success"){
 							allCost += parseFloat(result.cost);
+							monthCost += parseFloat(result.cost);
 							$("#"+tipId).html("已录入；金额："+result.cost+"元");
 							refreshCost();
+							statistic();
+							statisticPieMonth();
 						}else{
 							$("#"+tipId).html("好像没录入成功，刷新下看看！");
 							$(ele).removeAttr("disabled","disabled");
@@ -199,6 +239,21 @@ input[type='button']{
 					}
 				})
 			}
+		}
+		function statistic(){
+			$(".statistics").load("/quickbill/statistic/week",function(){
+				$(".canvasjs-chart-credit").hide();
+			});
+		}
+		function statisticMonth(){
+			$(".statisticsMonth").load("/quickbill/statistic/month",function(){
+				$(".canvasjs-chart-credit").hide();
+			});
+		}
+		function statisticPieMonth(){
+			$(".statisticsPieMonth").load("/quickbill/statistic/pieMonth",function(){
+				$(".canvasjs-chart-credit").hide();
+			});
 		}
 	</script>
 </body>

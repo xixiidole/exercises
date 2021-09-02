@@ -5,6 +5,7 @@ import com.jfinal.config.Interceptors;
 import com.jfinal.config.JFinalConfig;
 import com.jfinal.config.Plugins;
 import com.jfinal.config.Routes;
+import com.jfinal.kit.PropKit;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 import com.jfinal.plugin.druid.DruidPlugin;
 import com.jfinal.plugin.ehcache.EhCachePlugin;
@@ -27,6 +28,7 @@ public class DemoConfig extends JFinalConfig {
        //在调用getPropertyToBoolean之前需要先调用loadPropertyFile
        loadPropertyFile("config.properties");
        loadPropertyFile("datasource.properties");
+       loadPropertyFile("uploadfile.properties");
        //设置jfinal的开发模式
        me.setDevMode(getPropertyToBoolean("devMode",true));
        me.setViewType(ViewType.FREE_MARKER);
@@ -44,11 +46,11 @@ public class DemoConfig extends JFinalConfig {
     }
     
     public void configPlugin(Plugins plugins) {
-    	int initialSize = getPropertyToInt("initialSize");
-        int minIdle = getPropertyToInt("minIdle");
-        int maxActive = getPropertyToInt("maxActive");
+    	int initialSize = PropKit.use("datasource.properties").getInt("initialSize");
+        int minIdle = PropKit.use("datasource.properties").getInt("minIdle");
+        int maxActive = PropKit.use("datasource.properties").getInt("maxActive");
         //获取jdbc连接池
-        DruidPlugin druidPlugin = new DruidPlugin(getProperty("jdbcUrl"), getProperty("user"), getProperty("password").trim());
+        DruidPlugin druidPlugin = new DruidPlugin(PropKit.use("datasource.properties").get("jdbcUrl"), PropKit.use("datasource.properties").get("user"), PropKit.use("datasource.properties").get("password").trim());
         druidPlugin.set(initialSize, minIdle, maxActive);
         plugins.add(druidPlugin);
         //配置ActiveRecordPlugin插件

@@ -186,16 +186,19 @@ public class HelloController extends Controller {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String offset = getPara("offset");
 		Date d = new Date();
+		Calendar c = Calendar.getInstance();
 		if(StrKit.notBlank(offset)){
 			setAttr("offset", offset);
-			Calendar c = Calendar.getInstance();
 			c.add(Calendar.DATE, Integer.parseInt(offset));
 			d = c.getTime();
 		}
 		//默认当天
 		Record today = BillService.checkToday(sdf.format(d));
+		
+		Double monthCost = BillService.countMonth(c.get(Calendar.YEAR), c.get(Calendar.MONTH)+1);
 		setAttr("date", sdf.format(d));
 		setAttr("bill", today);
+		setAttr("monthCost", monthCost);
 		render("hello/billShotcut.html");
 	}
 	
@@ -230,6 +233,46 @@ public class HelloController extends Controller {
 		renderJson(r);
 	}
 	
+	@ActionKey("/quickbill/statistic/week")
+	public void statisticWeek(){
+		List<Record> data = null;
+		try{
+			data = BillService.billStatistics("1");
+			setAttr("data", data);
+		}catch(Exception e){
+			e.printStackTrace();
+			System.err.println("统计数据获取失败！");
+		}
+		render("hello/statisticWeek.html");
+	}
+	
+	@ActionKey("/quickbill/statistic/month")
+	public void statisticMonth(){
+		List<Record> data = null;
+		try{
+			data = BillService.billStatistics("2");
+			setAttr("data", data);
+		}catch(Exception e){
+			e.printStackTrace();
+			System.err.println("统计数据获取失败！");
+		}
+		render("hello/statisticMonth.html");
+	}
+	
+	@ActionKey("/quickbill/statistic/pieMonth")
+	public void pieMonth(){
+		List<Record> data = null;
+		try{
+			Calendar c = Calendar.getInstance();
+			data = BillService.PieMonth(c.get(Calendar.YEAR), c.get(Calendar.MONTH)+1);
+			setAttr("pieData", data);
+		}catch(Exception e){
+			e.printStackTrace();
+			System.err.println("pieMonth统计数据获取失败！");
+		}
+		render("hello/statisticMonthPie.html");
+	}
+	
 	@ActionKey("/fileCabinet")
 	public void fileCabinet(){
 		render("hello/fileCabinet.html");
@@ -261,6 +304,23 @@ public class HelloController extends Controller {
 	public void fileList(){
 		Map<String, List<Record>> fileList = FileService.getFileList(3);
 		renderJson(fileList);
+	}
+	
+	@ActionKey("/fileCabinet/getFile")
+	public void getCabinetFile(){
+		String fid = getPara("uid");
+		File file = null;
+		String fn = "";
+		if(StrKit.notBlank(fid)){
+			file = FileService.getFile(fid);
+			if(null!=file){
+				//重命名下
+				fn = file.getName();
+				renderFile(file,fn.substring(0, fn.lastIndexOf("__")));
+				return;
+			}
+		}
+		renderText("获取失败！");
 	}
 	
 }

@@ -1,0 +1,110 @@
+<div id="chartContainer" style="height: 280px; width: 520px;max-width: 920px; margin: 0px auto;"></div>
+
+<script>
+var chartWeek = new CanvasJS.Chart("chartContainer", {
+	animationEnabled: true,
+	axisX: {
+		valueFormatString:"MM月DD日",
+	},
+	axisY:{
+		valueFormatString:"#0元",
+		gridColor: "#B6B1A8",
+		tickColor: "#B6B1A8",
+		stripLines: [{
+			value: 27,
+			label: "一日三餐基准27元"
+		}]
+	},
+	toolTip: {
+		shared: true,
+		content: toolTipContent
+	},
+	data: [{
+		type: "stackedColumn",
+		showInLegend: true,
+		indexLabel: "{y}",
+		indexLabelFontColor: "#3b3b3b",
+		indexLabelPlacement: "inside",
+		color: "#cbd9ff",
+		name: "早餐",
+		dataPoints: [
+			<#if data??>
+				<#list data as d>
+					<#if d.itemName == '早餐'>
+						{ y: ${d.cost}, x: new Date("${d.itemDate?replace('-','/')}") },
+					</#if>
+				</#list>
+			</#if>
+		]},
+		{        
+			type: "stackedColumn",
+			showInLegend: true,
+			name: "午餐",
+			color: "#f2e6be",
+			indexLabel: "{y}",
+			indexLabelFontColor: "#3b3b3b",
+			indexLabelPlacement: "inside",
+			dataPoints: [
+				<#if data??>
+					<#list data as d>
+						<#if d.itemName == '午餐'>
+							{ y: ${d.cost}, x: new Date("${d.itemDate?replace('-','/')}") },
+						</#if>
+					</#list>
+				</#if>
+			]
+		},
+		{        
+			type: "stackedColumn",
+			showInLegend: true,
+			name: "晚餐",
+			color: "#e5f9ff",
+			indexLabel: "{y}",
+			indexLabelFontColor: "#3b3b3b",
+			indexLabelPlacement: "inside",
+			dataPoints: [
+				<#if data??>
+					<#list data as d>
+						<#if d.itemName == '晚餐'>
+							{ y: ${d.cost}, x: new Date("${d.itemDate?replace('-','/')}") },
+						</#if>
+					</#list>
+				</#if>
+			]
+		},
+		{        
+			type: "stackedColumn",
+			showInLegend: true,
+			name: "其他",
+			color: "#ffdada",
+			indexLabel: "{y}",
+			indexLabelFontColor: "#3b3b3b",
+			indexLabelPlacement: "inside",
+			dataPoints: [
+				<#if data??>
+					<#list data as d>
+						<#if d.itemName == '其他'>
+							{ y: ${d.cost}, x: new Date("${d.itemDate?replace('-','/')}")},
+						</#if>
+					</#list>
+				</#if>
+			]
+	}]
+});
+chartWeek.render();
+
+function toolTipContent(e) {
+	var str = "";
+	var total = 0;
+	var str2, str3;
+	for (var i = 0; i < e.entries.length; i++){
+		var  str1 = "<span style= \"color:"+e.entries[i].dataSeries.color + "\"> "+e.entries[i].dataSeries.name+"</span>: <strong>"+e.entries[i].dataPoint.y+"</strong>元<br/>";
+		total = e.entries[i].dataPoint.y + total;
+		str = str.concat(str1);
+	}
+	str2 = "<span style = \"color:DodgerBlue;\"><strong>"+(e.entries[0].dataPoint.x).toLocaleDateString()+"</strong></span><br/>";
+	total = Math.round(total * 100) / 100;
+	str3 = "<span style = \"color:Tomato\">共:</span><strong> "+total+"元</strong><br/>";
+	return (str2.concat(str)).concat(str3);
+}
+</script>

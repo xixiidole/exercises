@@ -226,6 +226,8 @@ html,body{
                             $("#PTUF").find(".file").slideUp('slow').remove();
                             choosenFiles = [];
                             uploadFiles = [];
+                            
+                            getFileList();
                         }
                         else alert(data.msg);
                     }
@@ -245,7 +247,7 @@ html,body{
                     if(per==100){
                     	$("#uploadBtn").html("上传");
                     	document.getElementById("uploadBtn").onclick = function(){startUpload();};
-                    	getFileList();
+                    	//getFileList();
                     }
                 }
                 xhr.open("post", '/fileUpload');
@@ -271,7 +273,7 @@ html,body{
 								for(var y=0;y<files.length;y++){
 									var file = '<div class="file">'+
 													'<div class="progressBar"></div>'+
-													'<div class="info"><a class="type '+(files[y].name.lastIndexOf(".")>0?files[y].name.substring(files[y].name.lastIndexOf(".")+1):'unknown')+'"></a><a class="name">'+files[y].name+'</a><a class="size">大小：'+size(files[y].size)+'</a><a class="download" onclick="download(\''+files[y].uid+'\')" >点击下载</a></div>'+
+													'<div class="info"><a class="type '+(files[y].name.lastIndexOf(".")>0?files[y].name.substring(files[y].name.lastIndexOf(".")+1):'unknown')+'"></a><a class="name">'+files[y].name+'</a><a class="size">大小：'+size(files[y].size)+'</a><a class="download" onclick="getFile(\''+files[y].uid+'\')" >点击下载</a></div>'+
 												'</div>';
 									list.append(file);
 								}
@@ -291,6 +293,9 @@ html,body{
 			if(b<1024)return b+"字节";
 			if(b<1048576)return (Math.floor(b*100/1024)/100)+"KB";
 			return (Math.floor(b*100/1024/1024)/100)+"M";
+		}
+		function getFile(uid){
+			window.open("/fileCabinet/getFile?uid="+uid);
 		}
 	</script>
 </body>

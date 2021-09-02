@@ -237,15 +237,19 @@ a:hover {
 			var bb = false;
 			var fj = false;
 			var nfjd = 0;
+			console.log("len"+npd.length);
 			for(var i=0;i<npd.length;i++){
+				console.log($(npd[i]));
 				if($(npd[i]).hasClass("holiday")){
-					fj =true;
-					nfjd = i;
-					break;
+					if(!fj){
+						fj =true;
+						nfjd = i;
+					}
 				}
 				if($(npd[i]).hasClass("work")){
-					bb =true;
-					break;
+					if(!bb){
+						bb =true;
+					}
 				}
 			}
 			if(!eh){
@@ -255,7 +259,7 @@ a:hover {
 				}
 			}else{
 				if(!fj){
-					msg += "<span class='tips' title='_(:3 」∠)_'>本月内已经没有节假日了，祈祷这周末不加班吧！_(:3 」∠)_</span>&emsp;";
+					msg += "<span class='tips' title='_(:3 」∠)_'>X本月内已经没有节假日了，祈祷这周末不加班吧！_(:3 」∠)_</span>&emsp;";
 					if(bb){
 						msg += "<span class='tips' title='ε(┬┬﹏┬┬)3'>假期没了，但还要补班，你敢信！ε(┬┬﹏┬┬)3</span>&emsp;";
 					}

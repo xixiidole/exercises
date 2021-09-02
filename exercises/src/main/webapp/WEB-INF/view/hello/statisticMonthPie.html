@@ -1,0 +1,28 @@
+<div id="pieMonth" style="height: 280px; width: 300px; margin: 0px auto;"></div>
+
+<script>
+var pieMonth = new CanvasJS.Chart("pieMonth", {
+	subtitles: [{
+		text: "${year!}年${month!}月消费情况"
+	}],
+	animationEnabled: true,
+	data: [{
+		type: "pie",
+		startAngle: 40,
+		toolTipContent: "<b>{label}</b>: {y}元",
+		showInLegend: "true",
+		legendText: "{label}",
+		indexLabelFontSize: 16,
+		indexLabel: "{label} - {y}元",
+		dataPoints: [
+			<#if pieData??>
+			<#list pieData as p>
+				{ y: ${p.cost}, label: "${p.type}" },
+			</#list>
+			</#if>
+		]
+	}]
+});
+pieMonth.render();
+
+</script>
