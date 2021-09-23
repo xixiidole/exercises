@@ -160,6 +160,7 @@ input[type='button']{
 								$("#"+tipId).html("已录入；金额："+result.cost+"元");
 								refreshCost();
 								statistic();
+								statisticPieMonth(); 
 							}else{
 								$("#"+tipId).html("好像没录入成功，刷新下看看！");
 								$(ele).removeAttr("disabled","disabled");
@@ -227,7 +228,7 @@ input[type='button']{
 							$("#"+tipId).html("已录入；金额："+result.cost+"元");
 							refreshCost();
 							statistic();
-							statisticPieMonth();
+							statisticPieMonth(); 
 						}else{
 							$("#"+tipId).html("好像没录入成功，刷新下看看！");
 							$(ele).removeAttr("disabled","disabled");

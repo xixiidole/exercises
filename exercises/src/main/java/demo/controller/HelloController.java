@@ -266,6 +266,8 @@ public class HelloController extends Controller {
 			Calendar c = Calendar.getInstance();
 			data = BillService.PieMonth(c.get(Calendar.YEAR), c.get(Calendar.MONTH)+1);
 			setAttr("pieData", data);
+			setAttr("year", c.get(Calendar.YEAR));
+			setAttr("month", c.get(Calendar.MONTH)+1);
 		}catch(Exception e){
 			e.printStackTrace();
 			System.err.println("pieMonth统计数据获取失败！");
