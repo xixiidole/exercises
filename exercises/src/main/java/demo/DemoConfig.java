@@ -1,4 +1,5 @@
 package demo;
+
 import com.jfinal.config.Constants;
 import com.jfinal.config.Handlers;
 import com.jfinal.config.Interceptors;
@@ -8,7 +9,6 @@ import com.jfinal.config.Routes;
 import com.jfinal.kit.PropKit;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 import com.jfinal.plugin.druid.DruidPlugin;
-import com.jfinal.plugin.ehcache.EhCachePlugin;
 import com.jfinal.render.ViewType;
 import com.jfinal.server.undertow.UndertowServer;
 import com.jfinal.template.Engine;
@@ -16,6 +16,7 @@ import com.jfinal.template.Engine;
 import demo.controller.CountingDownController;
 import demo.controller.HelloController;
 import demo.controller.MyMessageBoxController;
+
  
 public class DemoConfig extends JFinalConfig {
  

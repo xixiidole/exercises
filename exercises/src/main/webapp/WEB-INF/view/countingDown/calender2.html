@@ -5,44 +5,82 @@
 <title>日历</title>
 <style>
 body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, fieldset, input, textarea, p, blockquote, th, td {
-    margin: 0;padding: 0;font-size: 10px;
+    margin: 0;
+    padding: 0;
+    font-size: 10px;
 }
-a:hover {text-decoration: none;}
-.calenderTitle{width:60%;margin: auto;margin-top:2%;}
+a:hover {
+    text-decoration: none;
+}
+.calenderTitle{
+	width:60%;
+	margin: auto;
+	margin-top:2%;
+}
 .calenderPart{
-	width:60%;margin: auto;margin-top:1%;border-right: 1px solid #000;border-top: 1px solid #000;
-	border-spacing: 0;border-collapse: collapse;
+	width:60%;
+	margin: auto;
+	margin-top:1%;
+	border-right: 1px solid #000;
+	border-top: 1px solid #000;
+	border-spacing: 0;
+	border-collapse: collapse;
 }
-.calenderPart tr td{border-bottom: 1px solid #000;border-left: 1px solid #000;height: 50px;width: 10%;text-align: center;}
+.calenderPart tr td{
+	border-bottom: 1px solid #000;
+	border-left: 1px solid #000;
+	height: 50px;
+	width: 10%;
+	text-align: center;
+}
 
 .days{display: inline-block;}
 .work{background-color: #ffe1e1 !important;}
 .weekend{background-color: #f7f3c2;border-right: 1px solid #000;}
 .holiday{background-color: #bff5bf;border-right: 1px solid #000;}
 .note,.day{display: block;}
+
 .passed{color: #8e8c8c;}
 .today{background-color: #6cd2f0 !important;}
-.other{margin-left: 20px;}
-.tips{border: 1px solid #ddd;padding: 2px 5px;border-radius: 4px;cursor: pointer;display: inline-block;margin-bottom: 5px;}
-.tips:hover{background-color: #d2f2fb;}
-.yearDuration{height: 30px;width: 60%;margin: auto;margin-top: 30px;padding:0px 30px;}
-.jdt{height: 10px;border: 1px solid #000;border-radius:5px;}
-.pass{height: inherit;background-color: #6cd2f0;}
-.passTip{position:relative;}
-.hardTime{display: block;width: 50px;background-color: #ff5454;border-radius: 5px;color: #fff;cursor: pointer;}
 
-.WOPart{width:60%;margin: auto;margin-top:1%;border-spacing: 0;}
-.status{border-radius: 50px;display: block;width:20px;height: 20px;}
-.unavailable{background-color: #8e8c8c;}
-.available{background-color: #33c635;}
-.WOSpan{display: block;font-size: large;font-weight: bold;box-shadow: #cecece 3px 3px 5px;text-align:center;}
-.duration{display: inline-block;width:30px;font-weight: bold;border-right: 1px solid #ddd;line-height: 35px;text-align:center;}
-.date{display: inline-block;font-weight: bold;padding: 5px;text-align:center;}
-.remark{display: inline-block;font-weight: bold;padding: 5px;border-left: 1px solid #ddd;}
-.TOSpan{display: inline-block;border: 1px solid #ddd;border-radius: 5px;box-shadow: #cecece 3px 3px 5px;text-align:left;margin-right: 5px;}
-.TOSpan span{text-align:center;}
-.addTO{border: 1px solid #49c0ff;padding: 2px 6px 4px 6px;text-decoration: none;border-radius: 5px;}
-.addTO:hover{background-color:#49c0ff; }
+.other{margin-left: 20px;}
+
+.tips{
+	border: 1px solid #ddd;
+	padding: 2px 5px;
+	border-radius: 4px;
+	cursor: pointer;
+	display: inline-block;
+	margin-bottom: 5px;
+}
+.tips:hover{background-color: #d2f2fb;}
+.yearDuration{
+    height: 30px;
+    width: 60%;
+    margin: auto;
+    margin-top: 30px;
+    padding:0px 30px;
+}
+.jdt{
+	height: 10px;
+	border: 1px solid #000;
+	border-radius:5px;
+}
+.pass{
+    height: inherit;
+	background-color: #6cd2f0;
+}
+.passTip{
+	position:relative;
+}
+.hardTime{
+	display: block;
+    width: 50px;
+    background-color: #ff5454;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+}
 </style>
 </head>
 <body>
@@ -56,8 +94,8 @@ a:hover {text-decoration: none;}
 		<tr>
 			<td>
 				<select id="year">
-					<!-- <option value="2021">2021</option> -->
-					<option value="2022">2022</option> 
+					<option value="2021">2021</option>
+					<option value="2022">*2022*</option> 
 				</select> - 
 				<select id="month" onchange="getData();">
 					<option value=""></option>
@@ -96,32 +134,7 @@ a:hover {text-decoration: none;}
 		<tbody id="days">
 		</tbody>
 	</table>
-	<div class="WOPart">
-		<input type="button" onclick="getWOdays();" value="点击获取加班列表"/>
-		<div class="newTO">
-			
-		</div>
-		<div class="WO">
-			<table>
-				<thead>
-					<tr style="line-height: 30px;">
-						<td style="border-bottom: 1px solid #000;text-align: center;">状态</td>
-						<td style="border-bottom: 1px solid #000;text-align: center;">加班时间</td>
-						<td style="width:50px;border-bottom: 1px solid #000;"></td>
-						<td>调休时间</td>
-					</tr>
-				</thead>
-				<tbody id="txrecord">
-					<tr>
-						<td><span class="status unavailable" title="状态"></span></td>
-						<td><span class="WOSpan">暂无加班记录</span></td>
-						<td></td>
-						<td></td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-	</div>
+	
 	<script type="text/javascript" src="/resources/js/jquery-3.3.1.min.js"></script>
 	<script type="text/javascript">
 		$(function(){
@@ -358,41 +371,6 @@ a:hover {text-decoration: none;}
 					}
 				});
 			}
-		}
-		function getWOdays(){
-			$.ajax({
-				url:"/jbData",
-				dataType:"json",
-				success:function(data){
-					console.log(data);
-					if(data){
-						$("#txrecord").html("");
-						for(var x=0;x<data.length;x++){
-							var z = "<tr><td><span class='status "+data[x].state+"' title='状态'></span></td><td class='wodate WOSpan'><span class='duration'>1</span><span class='date'>"+data[x].date.substring(0,10)+"</span></td>";
-							if(data[x].children && data[x].children.length>0){
-								z += "<td style='text-align:center;'>调休</td><td>";
-								for(var c in data[x].children){
-									z += "<span class='TOSpan'><span class='duration'>"+data[x].children[c].takeoffduration+"</span><span class='date'>"+data[x].children[c].takeoffdate.substring(0,10)+"</span><span class='remark'>"+data[x].children[c].remark+"</span></span>";
-								}
-								if("available" == data[x].state){
-									//未调休完的情况
-									z += "<a class='addTO' href='javascript:void(0);' onclick='addTxjl();'>+</a>";
-								}
-								z += "</td>";
-							}else{
-								z += "<td style='text-align:center;'><a class='addTO' href='javascript:void(0);' onclick='addTxjl();'>+</a></td><td></td>";
-							}
-							z += "</tr>";
-							$("#txrecord").append(z);
-						}
-					}else{
-						$("#txrecord").html("<tr colspan='4'><td>请重新获取加班记录！</td></tr>");
-					}
-				}
-			})
-		}
-		function addTxjl(){
-			alert("施工中.... （没控件，懒得弄了）");
 		}
 	</script>
 </body>

@@ -1,0 +1,26 @@
+<!DOCTYPE>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>startCountingdown</title>
+<style type="text/css">
+	.colorBlock{padding-left: 20px;}
+	.floating{float: left;}
+	.tip{margin-top:100px;}
+	.centerTitle{text-align: center;}
+</style>
+</head>
+<body class="background">
+	<form id="rule" method="post">
+	<div style="width:700px;heigth:100%;margin: 3px auto;">
+		时间：<select id="islunar"><option value="">公历</option><option value="1">农历</option></select> 从 <input type="text" style="width:100px" /> 到  <input type="text" style="width:100px" /> <input type="text" style="width:100px" /> 点
+		事件：<input type="text" style="width:200px" />
+		重复：<select id="repeat"><option value=""></option><option value="year">每年</option><option value="month">每月</option><option value="day">每天</option></select>
+		持续：<input id="duration" type="text" style="width:100px" />
+		合计：<select id="needCount"><option value="">不需要</option><option value="1">需要</option></select>
+		<div><input type="submit" id="" /></div>
+	</div>
+	
+	</form>
+</body>
+</html>

@@ -84,11 +84,23 @@ public class CountingDownController extends Controller {
 		render("calender.html");
 	}
 	
+	@ActionKey("/calender2")
+	public void calender2() {
+		render("calender2.html");
+	}
+	
 	@ActionKey("/calenderData")
 	public void calendarData(){
 		String year = getPara("year");
 		String month = getPara("month");
 		String json = CalendarService.calendarData(year,month);
+		renderJson(json);
+	}
+	
+	@ActionKey("/calender2Data")
+	public void calendar2Data(){
+		String year = getPara("year");
+		String json = CalendarService.calendar2Data(year);
 		renderJson(json);
 	}
 	
@@ -116,5 +128,24 @@ public class CountingDownController extends Controller {
 		
 		renderJson(r);
 	}
+	
+	@ActionKey("/txData")
+	public void jbtxData() {
+		List<Record> txData = CalendarService.txData();
+		renderJson(txData);
+    }
+	
+	@ActionKey("/jbData")
+	public void jbData() {
+		List<Record> jbData = CalendarService.jbTxData();
+		renderJson(jbData);
+    }
+	
+	@ActionKey("/todoRules")
+	public void todoRules() {
+		//
+		render("todoRules.html");
+    }
+	
 	
 }
