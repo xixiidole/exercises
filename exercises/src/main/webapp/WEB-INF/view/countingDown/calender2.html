@@ -5,82 +5,66 @@
 <title>日历</title>
 <style>
 body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, fieldset, input, textarea, p, blockquote, th, td {
-    margin: 0;
-    padding: 0;
-    font-size: 10px;
+    margin: 0;padding: 0;font-size: 10px;
 }
-a:hover {
-    text-decoration: none;
+a:hover {text-decoration: none;}
+.calenderTitle{width:60%;margin: auto;margin-top:2%;}
+.calenderPart{width:60%;margin: auto;margin-top:1%;}
+.calenderTable{
+	float: left;width: 65%;border-right: 1px solid #000;border-top: 1px solid #000;border-spacing: 0;border-collapse: collapse;
 }
-.calenderTitle{
-	width:60%;
-	margin: auto;
-	margin-top:2%;
-}
-.calenderPart{
-	width:60%;
-	margin: auto;
-	margin-top:1%;
-	border-right: 1px solid #000;
-	border-top: 1px solid #000;
-	border-spacing: 0;
-	border-collapse: collapse;
-}
-.calenderPart tr td{
-	border-bottom: 1px solid #000;
-	border-left: 1px solid #000;
-	height: 50px;
-	width: 10%;
-	text-align: center;
-}
+.calenderTable tr td{border-bottom: 1px solid #000;border-left: 1px solid #000;height: 50px;width: 10%;text-align: center;}
+.calenderTable tr td:hover{border:1px solid #000;box-shadow: 0px 0px 5px 5px #b8e8ff inset;-webkit-animation: onhover 2.5s infinite;animation: onhover 2.5s infinite;}
 
 .days{display: inline-block;}
 .work{background-color: #ffe1e1 !important;}
-.weekend{background-color: #f7f3c2;border-right: 1px solid #000;}
-.holiday{background-color: #bff5bf;border-right: 1px solid #000;}
+.weekend{background-color: #f7f3c2;}
+.holiday{background-color: #bff5bf;}
 .note,.day{display: block;}
-
 .passed{color: #8e8c8c;}
 .today{background-color: #6cd2f0 !important;}
-
 .other{margin-left: 20px;}
-
-.tips{
-	border: 1px solid #ddd;
-	padding: 2px 5px;
-	border-radius: 4px;
-	cursor: pointer;
-	display: inline-block;
-	margin-bottom: 5px;
-}
+.tips{border: 1px solid #ddd;padding: 2px 5px;border-radius: 4px;cursor: pointer;display: inline-block;margin-bottom: 5px;}
 .tips:hover{background-color: #d2f2fb;}
-.yearDuration{
-    height: 30px;
-    width: 60%;
-    margin: auto;
-    margin-top: 30px;
-    padding:0px 30px;
+.yearDuration{height: 30px;width: 60%;margin: auto;margin-top: 30px;padding:0px 30px;}
+.jdt{height: 10px;border: 1px solid #000;border-radius:5px;}
+.pass{height: inherit;background-color: #6cd2f0;}
+.passTip{position:relative;}
+.hardTime{display: block;width: 50px;background-color: #ff5454;border-radius: 5px;color: #fff;cursor: pointer;}
+
+.WOPart{width:60%;margin: auto;margin-top:1%;border-spacing: 0;}
+.status{border-radius: 50px;display: block;width:20px;height: 20px;}
+.unavailable{background-color: #8e8c8c;}
+.available{background-color: #33c635;}
+.WOSpan{display: block;font-size: large;font-weight: bold;box-shadow: #cecece 3px 3px 5px;text-align:center;}
+.duration{display: inline-block;width:30px;font-weight: bold;border-right: 1px solid #ddd;line-height: 35px;text-align:center;}
+.date{display: inline-block;font-weight: bold;padding: 5px;text-align:center;}
+.remark{display: inline-block;font-weight: bold;padding: 5px;border-left: 1px solid #ddd;}
+.TOSpan{display: inline-block;border: 1px solid #ddd;border-radius: 5px;box-shadow: #cecece 3px 3px 5px;text-align:left;margin-right: 5px;}
+.TOSpan span{text-align:center;}
+.addTO{border: 1px solid #49c0ff;padding: 2px 6px 4px 6px;text-decoration: none;border-radius: 5px;}
+.addTO:hover{background-color:#49c0ff; }
+
+.switch{border: 1px solid #ddd;padding: 1px 2px 2px 2px;cursor:pointer;}
+.dateSelect{border: 1px solid #ddd;padding: 1px;}
+.calenderNotes{float: right;margin-right: 5px;width: 33%;background-color:#ade0ee;height: 307px;border: 1px solid #ddd;}
+.noteTitle{color: #fff;line-height: 30px;font-size: 14px;padding: 10px;background-color: #aba888;}
+.note{padding: 10px 3px 10px 3px;}
+.expand{}
+.vacationNote{}
+.warnNote{}
+.birthNote{}
+
+/* Chrome, Safari, Opera */
+@-webkit-keyframes onhover {
+    50% {box-shadow: 0px 0px 5px 5px #4ba4cf inset;}
 }
-.jdt{
-	height: 10px;
-	border: 1px solid #000;
-	border-radius:5px;
+
+/* Standard syntax */
+@keyframes onhover {
+    50% {box-shadow: 0px 0px 5px 5px #74b6fb inset;}
 }
-.pass{
-    height: inherit;
-	background-color: #6cd2f0;
-}
-.passTip{
-	position:relative;
-}
-.hardTime{
-	display: block;
-    width: 50px;
-    background-color: #ff5454;
-    border-radius: 5px;
-    color: #fff;
-    cursor: pointer;
-}
+
 </style>
 </head>
 <body>
@@ -93,11 +77,14 @@ a:hover {
 	<table class="calenderTitle">
 		<tr>
 			<td>
-				<select id="year">
-					<option value="2021">2021</option>
-					<option value="2022">*2022*</option> 
-				</select> - 
-				<select id="month" onchange="getData();">
+				<span class="yearPrev switch" >&lt;</span>
+				<select id="year" class="dateSelect" onchange="getData();">
+					<option value="2022">2022</option> 
+				</select>
+				<span class="yearNext switch">&gt;</span>
+				 - 
+				 <span class="monthPrev switch">&lt;</span>
+				<select id="month" class="dateSelect" onchange="getData();">
 					<option value=""></option>
 					<option value="01">01</option>
 					<option value="02">02</option>
@@ -112,36 +99,105 @@ a:hover {
 					<option value="11">11</option>
 					<option value="12">12</option>
 				</select>
-				
+				<span class="monthNext switch">&gt;</span>
 				<span class="other">
 					今天：
 				</span>
 			</td>
 		</tr>
 	</table>
-	<table id="x" class="calenderPart">
-		<thead>
-			<tr>
-				<td>星期一</td>
-				<td>星期二</td>
-				<td>星期三</td>
-				<td>星期四</td>
-				<td>星期五</td>
-				<td class="weekend">星期六</td>
-				<td class="weekend">星期天</td>
-			</tr>
-		</thead>
-		<tbody id="days">
-		</tbody>
-	</table>
+	<div class="calenderPart">
+		<table id="x" class="calenderTable">
+			<thead>
+				<tr>
+					<td>星期一</td>
+					<td>星期二</td>
+					<td>星期三</td>
+					<td>星期四</td>
+					<td>星期五</td>
+					<td class="weekend">星期六</td>
+					<td class="weekend">星期天</td>
+				</tr>
+			</thead>
+			<tbody id="days">
+			</tbody>
+		</table>
+		<div class="calenderNotes">
+			<div class="noteTitle">备忘录：</div>
+			<div class="notes">
+				<div class="note warnNote">
+					<span>今天（2022-04-01） 要交房租了！</span>
+				</div>
+				<div class="note birthNote">
+					<span>5天后（2022-04-01） 某某某的生日！<span class="expand">↓</span></span>
+					<span></span>
+				</div>
+				<div class="note warnNote">
+					<span>6天后（2022-04-02） 要补班</span>
+				</div>
+				<div class="note vacationNote">
+					<span>7天后（2022-04-03） 清明节放假！</span>
+				</div>
+			</div>
+		</div>
+		<div style="clear:both;"></div>
+	</div>
 	
+	<div class="WOPart">
+		<input type="button" onclick="getWOdays();" value="点击获取加班列表"/>
+		<div class="newTO">
+			
+		</div>
+		<div class="WO">
+			<table>
+				<thead>
+					<tr style="line-height: 30px;">
+						<td style="border-bottom: 1px solid #000;text-align: center;">状态</td>
+						<td style="border-bottom: 1px solid #000;text-align: center;">加班时间</td>
+						<td style="width:50px;border-bottom: 1px solid #000;"></td>
+						<td>调休时间</td>
+					</tr>
+				</thead>
+				<tbody id="txrecord">
+					<tr>
+						<td><span class="status unavailable" title="状态"></span></td>
+						<td><span class="WOSpan">暂无加班记录</span></td>
+						<td></td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
 	<script type="text/javascript" src="/resources/js/jquery-3.3.1.min.js"></script>
 	<script type="text/javascript">
 		$(function(){
 			getData();
+			
+			$(".switch").click(function(){
+				switchDate(this);
+			});
+			
 		});
-		var cm = "";
-		var _kyo = "";
+		function switchDate(ele){
+			if($(ele).hasClass("yearPrev")){
+				var cy = parseInt($("#year option:selected").val());
+				$("#year").html("<option value='"+(cy-1)+"'>"+(cy-1)+"</option>");
+			}else if($(ele).hasClass("yearNext")){
+				var cy = parseInt($("#year option:selected").val());
+				$("#year").html("<option value='"+(cy+1)+"'>"+(cy+1)+"</option>");
+			}else if($(ele).hasClass("monthPrev")){
+				var cmm = parseInt($("#month option:selected").val());
+				$("#month option[value='"+((cmm-1)<10?"0"+(cmm-1):(cmm-1))+"']").prop("selected","selected");
+			}else if($(ele).hasClass("monthNext")){
+				var cmm = parseInt($("#month option:selected").val());
+				$("#month option[value='"+((cmm+1)<10?"0"+(cmm+1):(cmm+1))+"']").prop("selected","selected");
+			}
+			getData();
+		}
+		var cy = "";//current year
+		var cm = "";//current month
+		var _kyo = "";//current date
 		function getData(){
 			$.ajax({
 				url:"/calenderData",
@@ -151,9 +207,10 @@ a:hover {
 				},
 				dataType:"json",
 				success:function(data){
-					//$("#year").html("<option value='"+data.year+"'>"+data.year+"</option>");
-					$("#year option[value='"+data.year+"']").attr("selected","selected");
-					cm = data.month;
+					$("#year").html("<option value='"+data.year+"'>"+data.year+"</option>");
+					//$("#year option[value='"+data.year+"']").attr("selected","selected");
+					cm = data.current.month;
+					cy = data.current.year;
 					_kyo = data.current.year+"-"+data.current.month+"-"+data.current.date;
 					$("#month option[value='"+data.month+"']").attr("selected","selected");
 					var tbody = GenTable(data);
@@ -234,8 +291,8 @@ a:hover {
 		}
 		function tip(){
 			var msg = "";
-			var eh = $(".calenderPart tbody tr td").hasClass("holiday");//本月内是否有holiday
-			var npd = $(".calenderPart tbody tr td:not(.passed):has(span)");//没有过的holiday
+			var eh = $(".calenderTable tbody tr td").hasClass("holiday");//本月内是否有holiday
+			var npd = $(".calenderTable tbody tr td:not(.passed):has(span)");//没有过的holiday
 			var bb = false;
 			var fj = false;
 			var nfjd = 0;
@@ -330,6 +387,10 @@ a:hover {
 			return ("00"+day).slice(-2);
 		}
 		function showYearDuration(){
+			console.log(1);
+			if(cy !=$("#year option:selected").val() || cm != $("#month option:selected").val() ){
+				return;//not current date,no need exec this;
+			}
 			var x = cm/12*100;
 			$(".pass").css("width",x+"%");
 			$(".passTip").html("今年已过"+x+"%");
@@ -371,6 +432,41 @@ a:hover {
 					}
 				});
 			}
+		}
+		function getWOdays(){
+			$.ajax({
+				url:"/jbData",
+				dataType:"json",
+				success:function(data){
+					console.log(data);
+					if(data){
+						$("#txrecord").html("");
+						for(var x=0;x<data.length;x++){
+							var z = "<tr><td><span class='status "+data[x].state+"' title='状态'></span></td><td class='wodate WOSpan'><span class='duration'>1</span><span class='date'>"+data[x].date.substring(0,10)+"</span></td>";
+							if(data[x].children && data[x].children.length>0){
+								z += "<td style='text-align:center;'>调休</td><td>";
+								for(var c in data[x].children){
+									z += "<span class='TOSpan'><span class='duration'>"+data[x].children[c].takeoffduration+"</span><span class='date'>"+data[x].children[c].takeoffdate.substring(0,10)+"</span><span class='remark'>"+data[x].children[c].remark+"</span></span>";
+								}
+								if("available" == data[x].state){
+									//未调休完的情况
+									z += "<a class='addTO' href='javascript:void(0);' onclick='addTxjl();'>+</a>";
+								}
+								z += "</td>";
+							}else{
+								z += "<td style='text-align:center;'><a class='addTO' href='javascript:void(0);' onclick='addTxjl();'>+</a></td><td></td>";
+							}
+							z += "</tr>";
+							$("#txrecord").append(z);
+						}
+					}else{
+						$("#txrecord").html("<tr colspan='4'><td>请重新获取加班记录！</td></tr>");
+					}
+				}
+			})
+		}
+		function addTxjl(){
+			alert("施工中.... （没控件，懒得弄了）");
 		}
 	</script>
 </body>

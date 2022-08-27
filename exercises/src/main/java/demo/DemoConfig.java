@@ -6,6 +6,7 @@ import com.jfinal.config.Interceptors;
 import com.jfinal.config.JFinalConfig;
 import com.jfinal.config.Plugins;
 import com.jfinal.config.Routes;
+import com.jfinal.kit.PathKit;
 import com.jfinal.kit.PropKit;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 import com.jfinal.plugin.druid.DruidPlugin;
@@ -16,11 +17,13 @@ import com.jfinal.template.Engine;
 import demo.controller.CountingDownController;
 import demo.controller.HelloController;
 import demo.controller.MyMessageBoxController;
+import demo.controller.PlaySomethingController;
 
  
 public class DemoConfig extends JFinalConfig {
  
     public static void main(String[] args) {
+    	    	
         UndertowServer.start(DemoConfig.class, 80, true);
     }
  
@@ -43,6 +46,7 @@ public class DemoConfig extends JFinalConfig {
        me.add("/", HelloController.class);
        me.add("/countingDown", CountingDownController.class);
        me.add("/myMessageBox", MyMessageBoxController.class);
+       me.add("/playSomething", PlaySomethingController.class);
         
     }
     

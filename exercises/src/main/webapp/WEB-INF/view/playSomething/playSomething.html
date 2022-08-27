@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
+<title>playSomething</title>
+<style>
+html,body {
+    width:100%;
+    height:100%;
+    padding: 0px;
+    margin: 0px;
+}
+.curPlay{
+	font-weight:bold;
+	height:35px;
+}
+.playList{
+	height: 300px;
+	overflow-x: hidden;
+}
+.song{
+	border: 1px solid #ddd;
+	line-height: 30px;
+	cursor:pointer;
+}
+.song:hover{
+	background-color:#f0f8ff;
+}
+</style>
+</head>
+<body>
+	<div class="curPlay"><a></a></div>
+	<div class="opts" >
+		<a>暂停</a>&emsp;&emsp;&emsp;&emsp;
+		<a>下一首</a>
+	</div>
+	<div class="playList">
+		<#if songList??>
+		<#list songList as ss>
+			<div class="song" uid="${ss.uid!}">${ss.name!}</div>
+		</#list>
+		</#if>
+	</div>
+	<audio id="player" controls="" height="100" width="100%" preload="auto" src="/resources/music/song1/song.mp3"></audio>
+	<script type="text/javascript" src="/resources/js/jquery-3.3.1.min.js"></script>
+	<script type="text/javascript">
+		$(function(){
+			$(".song").bind("click",function(){
+				getPlay(this);
+			});
+		});
+		function getPlay(ele){
+			var a = $(ele).attr("uid");
+			var b = $(ele).html();
+			$("#curPlay").html("<a>"+b+"</a>");
+			console.log("播放："+b);
+			$.ajax({
+				url:"/playSomething/getPlay",
+				data:{
+					"uid":a
+				},
+				dataType:"json",
+				success:function(data){
+					if(data.result=="200"){
+						$("#player").attr("src",data.src);
+					}else{
+						alert("播放失败！");
+					}
+				},
+				error:function(){
+					alert("播放失败！");
+				}
+			})
+		}
+	</script>
+</body>
+</html>

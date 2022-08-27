@@ -12,6 +12,7 @@ import javax.xml.namespace.QName;
 import com.jfinal.aop.Before;
 import com.jfinal.core.ActionKey;
 import com.jfinal.core.Controller;
+import com.jfinal.kit.PathKit;
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.plugin.activerecord.tx.Tx;
@@ -23,6 +24,7 @@ public class CountingDownController extends Controller {
 	
 	@ActionKey("/CD")
 	public void cdp() {
+		System.err.println(PathKit.getWebRootPath());
        render("cdp3.html");
     }
 	

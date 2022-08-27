@@ -124,4 +124,24 @@ public class FileService {
 		return f;
 	}
 	
+	/**
+	 * 读取文件到resource目录便于访问，playSomething用到
+	 * @param loc 数据库存的文件路径
+	 * @return 资源路径
+	 */
+	public static String readMusicFile(String loc){
+		String toLoc = PathKit.getWebRootPath();
+		if(toLoc.startsWith("/")){
+			toLoc = toLoc.substring(1);
+		}
+		String rp ="\\resources\\music\\"+(loc.substring(loc.indexOf("__")+2)+".mp3");
+		toLoc += rp;
+		System.err.println("renameTo toLoc = "+toLoc);
+		File f = new File(loc);
+		File f2 = new File(toLoc);
+		boolean a = f.renameTo(f2);
+		System.err.println("renameTo result = "+a);
+		return rp;
+	}
+	
 }
