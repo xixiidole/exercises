@@ -16,7 +16,7 @@ html,body {
 	height:35px;
 }
 .playList{
-	height: 300px;
+	height: 500px;
 	overflow-x: hidden;
 }
 .song{
@@ -26,6 +26,9 @@ html,body {
 }
 .song:hover{
 	background-color:#f0f8ff;
+}
+.playing{
+	background-color:#ffc107;
 }
 </style>
 </head>
@@ -38,22 +41,29 @@ html,body {
 	<div class="playList">
 		<#if songList??>
 		<#list songList as ss>
-			<div class="song" uid="${ss.uid!}">${ss.name!}</div>
+			<div class="song" uid="${ss.uid!}"><input type="checkbox" name="repeat" value="${ss.uid!}" onclick="addToList(this);" /><span class="sname">${ss.name!}</span></div>
 		</#list>
 		</#if>
 	</div>
-	<audio id="player" controls="" height="100" width="100%" preload="auto" src="/resources/music/song1/song.mp3"></audio>
+	<audio id="player" controls="" height="100" width="100%" preload="auto" autoplay="true" src="/resources/music/song1/song.mp3"></audio>
 	<script type="text/javascript" src="/resources/js/jquery-3.3.1.min.js"></script>
 	<script type="text/javascript">
+		var repeatList = [];
 		$(function(){
 			$(".song").bind("click",function(){
+				$(".playing").removeClass("playing");
+				$(this).addClass("playing");
 				getPlay(this);
 			});
+			var aud = document.getElementById("player");
+			aud.onended = function() {
+				Next();
+			};
 		});
 		function getPlay(ele){
 			var a = $(ele).attr("uid");
-			var b = $(ele).html();
-			$("#curPlay").html("<a>"+b+"</a>");
+			var b = $(ele).find(".sname").html();
+			$(".curPlay").html("<a>"+b+"</a>");
 			console.log("播放："+b);
 			$.ajax({
 				url:"/playSomething/getPlay",
@@ -72,6 +82,35 @@ html,body {
 					alert("播放失败！");
 				}
 			})
+		}
+		function Next(){
+			if($(":checkbox[name='repeat']:checked").length>0){
+				var all = $(":checkbox[name='repeat']:checked").length;
+				var next = 0;
+				$(":checkbox[name='repeat']:checked").each(function(i){
+					if($(this).parent().hasClass("playing")){
+					   if((i+1)==all){
+						   next = 0;
+						}else{
+							next = i+1;
+						}
+					}
+				});
+				$(":checkbox[name='repeat']:checked").each(function(i){
+					if(i==next){
+						$(this).parent().trigger("click");
+					}
+				});
+			}else{
+				if($(".playing").next()){
+					$(".playing").next().trigger("click");
+				}else{
+					$(".song").eq(0).trigger("click");
+				}
+			}
+		}
+		function addToList(ele){
+			
 		}
 	</script>
 </body>

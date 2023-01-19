@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -139,8 +141,11 @@ public class FileService {
 		System.err.println("renameTo toLoc = "+toLoc);
 		File f = new File(loc);
 		File f2 = new File(toLoc);
-		boolean a = f.renameTo(f2);
-		System.err.println("renameTo result = "+a);
+		try {
+			Files.copy(f.toPath(), f2.toPath());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		return rp;
 	}
 	

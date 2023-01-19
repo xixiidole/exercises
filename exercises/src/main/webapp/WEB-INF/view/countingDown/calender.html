@@ -56,8 +56,12 @@ a:hover {text-decoration: none;}
 		<tr>
 			<td>
 				<select id="year">
-					<!-- <option value="2021">2021</option> -->
-					<option value="2022">2022</option> 
+					<option value=""></option> 
+					<#if years??>
+						<#list years as y>
+							<option value="${y.year}">${y.year}</option> 
+						</#list>
+					</#if>
 				</select> - 
 				<select id="month" onchange="getData();">
 					<option value=""></option>
@@ -78,6 +82,11 @@ a:hover {text-decoration: none;}
 				<span class="other">
 					今天：
 				</span>
+				
+				<span class="tiqu" style="display:none;">
+					<input type="button" onclick="getNYVdays();" value="点击获取明年假期"/>
+				</span>
+				
 			</td>
 		</tr>
 	</table>
@@ -98,6 +107,7 @@ a:hover {text-decoration: none;}
 	</table>
 	<div class="WOPart">
 		<input type="button" onclick="getWOdays();" value="点击获取加班列表"/>
+		
 		<div class="newTO">
 			
 		</div>
@@ -126,6 +136,12 @@ a:hover {text-decoration: none;}
 	<script type="text/javascript">
 		$(function(){
 			getData();
+			
+			var a = ${cy};
+			if("${cm}"=="12" && $("#year option[value='"+(a+1)+"']").length==0 ){
+				$(".tiqu").show();
+			}
+			
 		});
 		var cm = "";
 		var _kyo = "";
@@ -394,6 +410,23 @@ a:hover {text-decoration: none;}
 		function addTxjl(){
 			alert("施工中.... （没控件，懒得弄了）");
 		}
+		function getNYVdays(){
+			var a = ${cy};
+			if($("#year option[value='"+(a+1)+"']").length>0 ){
+				$(".tiqu").hide();
+				alert("无需提取！");
+				return;
+			}
+			$.ajax({
+				url:"/genVacation",
+				success:function(data){
+					location.reload();
+				},error:function(){
+					
+				}
+			});
+		}
+		
 	</script>
 </body>
 </html>

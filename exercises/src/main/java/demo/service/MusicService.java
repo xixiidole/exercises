@@ -21,7 +21,7 @@ public class MusicService {
 	}
 	
 	public static List<Record> getSongList(){
-		songList = Db.find("select uid,name,location from files f where f.contentType like 'audio%'");
+		songList = Db.find("select uid,name,location from files f where f.contentType like 'audio/mpeg' order by f.uploadDt desc");
 		return songList;
 	}
 	
